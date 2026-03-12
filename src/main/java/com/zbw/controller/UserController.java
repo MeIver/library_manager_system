@@ -7,6 +7,7 @@ import com.zbw.domain.Vo.BorrowingBooksVo;
 import com.zbw.service.IBookService;
 import com.zbw.service.IBorrowingBooksRecordService;
 import com.zbw.service.IUserService;
+import com.zbw.utils.PasswordUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -236,5 +237,49 @@ public class UserController {
         } else {
             return "false";
         }
+    }
+
+    /**
+     * 返回用户安全设置页面
+     */
+    @RequestMapping("/userSecurityPage")
+    public String userSecurityPage() {
+        return "user/userSecurity";
+    }
+
+    /**
+     * 更新用户信息
+     */
+    @RequestMapping("/updateUserMessage")
+    @ResponseBody
+    public String updateUserMessage(User user, HttpServletRequest request) {
+        boolean result = userService.updateUser(user, request);
+        return result ? "success" : "fail";
+    }
+
+    /**
+     * 更新用户密码
+     */
+    @RequestMapping("/updateUserPassword")
+    @ResponseBody
+    public String updateUserPassword(@RequestParam("userId") int userId,
+                                     @RequestParam("oldPassword") String oldPassword,
+                                     @RequestParam("newPassword") String newPassword,
+                                     HttpServletRequest request) {
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            return "fail";
+        }
+        
+        String encryptedOldPassword = PasswordUtil.encrypt(oldPassword);
+        if (!encryptedOldPassword.equals(user.getUserPwd())) {
+            return "wrong";
+        }
+        
+        String encryptedNewPassword = PasswordUtil.encrypt(newPassword);
+        user.setUserPwd(encryptedNewPassword);
+        
+        boolean result = userService.updateUser(user, request);
+        return result ? "success" : "fail";
     }
 }

@@ -7,6 +7,7 @@ import com.zbw.domain.Vo.BookVo;
 import com.zbw.service.IAdminService;
 import com.zbw.service.IBookCategoryService;
 import com.zbw.service.IUserService;
+import com.zbw.utils.PasswordUtil;
 import com.zbw.utils.page.Page;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
@@ -163,6 +164,50 @@ public class AdminController {
     @ResponseBody
     public boolean updateAdmin(Admin admin, HttpServletRequest request) {
         return adminService.updateAdmin(admin, request);
+    }
+
+    /**
+     * 返回管理员安全设置页面
+     */
+    @RequestMapping("/adminSecurityPage")
+    public String adminSecurityPage() {
+        return "admin/adminSecurity";
+    }
+
+    /**
+     * 更新管理员信息
+     */
+    @RequestMapping("/updateAdminMessage")
+    @ResponseBody
+    public String updateAdminMessage(Admin admin, HttpServletRequest request) {
+        boolean result = adminService.updateAdmin(admin, request);
+        return result ? "success" : "fail";
+    }
+
+    /**
+     * 更新管理员密码
+     */
+    @RequestMapping("/updateAdminPassword")
+    @ResponseBody
+    public String updateAdminPassword(@RequestParam("adminId") int adminId,
+                                      @RequestParam("oldPassword") String oldPassword,
+                                      @RequestParam("newPassword") String newPassword,
+                                      HttpServletRequest request) {
+        Admin admin = adminService.findAdminById(adminId);
+        if (admin == null) {
+            return "fail";
+        }
+        
+        String encryptedOldPassword = PasswordUtil.encrypt(oldPassword);
+        if (!encryptedOldPassword.equals(admin.getAdminPwd())) {
+            return "wrong";
+        }
+        
+        String encryptedNewPassword = PasswordUtil.encrypt(newPassword);
+        admin.setAdminPwd(encryptedNewPassword);
+        
+        boolean result = adminService.updateAdmin(admin, request);
+        return result ? "success" : "fail";
     }
 
 }

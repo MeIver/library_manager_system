@@ -2,142 +2,422 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书管理系统 - 登录</title>
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/css/modern-style.css}">
     <style>
-
         body {
-            /*width: 100%;*/
-            /*height: 100%;*/
-            background: url("/images/background.png") no-repeat;
-            /*background: url("static/images/a.png") no-repeat;*/
-            background-size: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
         }
 
-        #login_form {
-            width: 400px;
-            height: 400px;
-            margin: 80px auto;
-            padding: 30px;
-            background-color: #f2f2f2;
-            opacity: 0.9;
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: rotate 30s linear infinite;
         }
 
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 50px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-logo i {
+            font-size: 40px;
+            color: #fff;
+        }
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 16px 16px 50px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #2d3748;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #667eea;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-input:focus + i,
+        .input-wrapper:has(.form-input:focus) i {
+            color: #667eea;
+        }
+
+        .form-input::placeholder {
+            color: #a0aec0;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .role-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .role-option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .role-option label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 20px;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        .role-option input:checked + label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .role-option label:hover {
+            border-color: #667eea;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .login-footer p {
+            color: #a0aec0;
+            font-size: 13px;
+        }
+
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            right: -100px;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            left: -50px;
+        }
+
+        .shape-3 {
+            width: 100px;
+            height: 100px;
+            top: 50%;
+            left: -30px;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 40px 25px;
+            }
+            
+            .login-title {
+                font-size: 24px;
+            }
+            
+            .role-selector {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
-
-<div id="wrapper">
-    <div class="layui-container" id="login_form">
-
-        <div>
-            <h1 style="color: red">图书管理系统</h1>
-            <br>
-            <h2>用户登录</h2>
-            <br>
-        </div>
-
-        <form class="layui-form" id="my_form" method="post" action="/userLogin">
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">用户名:</label>
-                <div class="layui-input-block">
-                    <input type="text" name="userName" id="username" autofocus
-                           placeholder="请输入用户名" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">密 码:</label>
-                <div class="layui-input-block">
-                    <input type="password" name="password" id="password"
-                           placeholder="请输入密码" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">用户身份</label>
-                <div class="layui-input-block">
-                    <input class="form-check-input" type="radio" name="role" value="1" title="学生" checked>
-                    <input class="form-check-input" type="radio" name="role" value="0" title="管理员">
-                </div>
-            </div>
-
-            <div class="layui-form-item layui-col-md4 layui-col-md-offset4">
-                <button id="sub_btn" class="layui-btn layui-btn-normal">登录</button>
-            </div>
-
-        </form>
-
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
     </div>
-</div>
 
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 19.5C4 18.837 4.26339 18.2011 4.73223 17.7322C5.20107 17.2634 5.83696 17 6.5 17H20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M6.5 2H20V22H6.5C5.83696 22 5.20107 21.7366 4.73223 21.2678C4.26339 20.7989 4 20.163 4 19.5V4.5C4 3.83696 4.26339 3.20107 4.73223 2.73223C5.20107 2.26339 5.83696 2 6.5 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h1 class="login-title">图书管理系统</h1>
+                <p class="login-subtitle">欢迎回来，请登录您的账户</p>
+            </div>
 
-<script th:src="@{/scripts/jquery.min.js}"></script>
-<script th:src="@{/layui/layui.js}"></script>
+            <form id="my_form" method="post" action="/userLogin">
+                <div class="form-group">
+                    <label>用户名</label>
+                    <div class="input-wrapper">
+                        <input type="text" name="userName" id="username" class="form-input" 
+                               placeholder="请输入用户名" autocomplete="off" autofocus>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                </div>
 
+                <div class="form-group">
+                    <label>密码</label>
+                    <div class="input-wrapper">
+                        <input type="password" name="password" id="password" class="form-input" 
+                               placeholder="请输入密码" autocomplete="off">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <circle cx="12" cy="16" r="1"/>
+                            <path d="M7 11V7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7V11"/>
+                        </svg>
+                    </div>
+                </div>
 
-<script th:inline="javascript">
-    layui.use(['layer', 'form'], function () {
-        let layer = layui.layer;
-        let form = layui.form;
-        form.render();
+                <div class="form-group">
+                    <label>登录身份</label>
+                    <div class="role-selector">
+                        <div class="role-option">
+                            <input type="radio" name="role" value="1" id="role-student" checked>
+                            <label for="role-student">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 10V18C22 19.1046 21.1046 20 20 20H4C2.89543 20 2 19.1046 2 18V10"/>
+                                    <path d="M12 2L2 10L12 18L22 10L12 2Z"/>
+                                </svg>
+                                学生
+                            </label>
+                        </div>
+                        <div class="role-option">
+                            <input type="radio" name="role" value="0" id="role-admin">
+                            <label for="role-admin">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 15C15.866 15 19 11.866 19 8C19 4.13401 15.866 1 12 1C8.13401 1 5 4.13401 5 8C5 11.866 8.13401 15 12 15Z"/>
+                                    <path d="M8.21 13.89L7 23L12 20L17 23L15.79 13.88"/>
+                                </svg>
+                                管理员
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
-        $(function () {
-            let flag = [[${session.flag}]];
-            if (flag) {
-                layer.msg("用户名或密码错误", {
-                    icon: 2,
-                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                });
-            }
-        });
-    });
+                <button type="button" id="sub_btn" class="btn-login">
+                    登 录
+                </button>
+            </form>
 
+            <div class="login-footer">
+                <p>© 2024 图书管理系统 All Rights Reserved</p>
+            </div>
+        </div>
+    </div>
 
-    $("#sub_btn").click(function () {
-        let username = $("#username").val();
-        let user_judge = check(username);
+    <script th:src="@{/scripts/jquery.min.js}"></script>
+    <script th:src="@{/layui/layui.js}"></script>
+    <script th:inline="javascript">
+        layui.use(['layer', 'form'], function () {
+            let layer = layui.layer;
+            let form = layui.form;
+            form.render();
 
-        // 首先判断用户名是否为空 
-        if (user_judge) {
-            let password = $("#password").val();
-            let pwd_judge = check(password);
-
-            // 用户名不为空  , 判断密码是否为空
-            if (pwd_judge) {
-                let role_id = $('input[name="role"]:checked').val();
-
-                // 如果role_id ==1 ,则是普通用户 , 直接提交表单
-                if (role_id == 1) {
-                    $("#my_form").submit();
-                } else {
-
-                    //如果是管理员 , 则将action 进行更改 
-                    $("#my_form").attr("action", "/adminLogin")
-                    $("#my_form").submit();
+            $(function () {
+                let flag = [[${session.flag}]];
+                if (flag) {
+                    layer.msg("用户名或密码错误", {
+                        icon: 2,
+                        time: 2000,
+                        anim: 5
+                    });
                 }
+            });
+        });
 
+        $("#sub_btn").click(function () {
+            let username = $("#username").val();
+            let user_judge = check(username);
+
+            if (user_judge) {
+                let password = $("#password").val();
+                let pwd_judge = check(password);
+
+                if (pwd_judge) {
+                    let role_id = $('input[name="role"]:checked').val();
+
+                    if (role_id == 1) {
+                        $("#my_form").submit();
+                    } else {
+                        $("#my_form").attr("action", "/adminLogin")
+                        $("#my_form").submit();
+                    }
+                } else {
+                    layer.alert("密码不能为空", {icon: 5, title: '提示'});
+                    return false;
+                }
             } else {
-                layer.alert("密码不能为空", {icon: 5});
+                layer.alert("用户名不能为空", {icon: 5, title: '提示'});
                 return false;
             }
-        } else {
+        });
 
-            layer.alert("用户名不能为空", {icon: 5});
-            return false;
+        function check(val) {
+            val = val.toString().trim();
+            return !(val == '');
         }
-    });
-
-    // 校验表单中用户名 与 密码是否输入,  如果有值 -> 返回 true , 如果未输入 返回 false;
-    function check(val) {
-        val = val.toString().trim();
-        return !(val == '');
-    }
-
-</script>
+    </script>
 </body>
 </html>

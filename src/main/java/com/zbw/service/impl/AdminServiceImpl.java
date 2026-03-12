@@ -5,6 +5,7 @@ import com.zbw.mapper.AdminMapper;
 import com.zbw.mapper.BookCategoryMapper;
 import com.zbw.mapper.BookMapper;
 import com.zbw.service.IAdminService;
+import com.zbw.utils.PasswordUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -83,18 +84,21 @@ public class AdminServiceImpl implements IAdminService {
 
     @Override
     public boolean updateAdmin(Admin admin, HttpServletRequest request) {
-        //获取session对象中admin对象
         Admin sessionAdmin = (Admin) request.getSession().getAttribute("admin");
         admin.setAdminId(sessionAdmin.getAdminId());
         int n = adminMapper.updateByPrimaryKey(admin);
 
         if (n > 0) {
-            //修改成功，更新session对象
             Admin newAdmin = adminMapper.selectByPrimaryKey(admin.getAdminId());
             request.getSession().setAttribute("admin", newAdmin);
             return true;
         }
 
         return false;
+    }
+
+    @Override
+    public Admin findAdminById(int adminId) {
+        return adminMapper.selectByPrimaryKey(adminId);
     }
 }

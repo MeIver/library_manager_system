@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员安全设置 - 图书管理系统</title>
+    <link href="/layui/css/layui.css" rel="stylesheet"/>
+    <link href="/css/modern-style.css" rel="stylesheet"/>
+    <style>
+        .security-container {
+            padding: 20px;
+        }
+
+        .security-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 20px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .security-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .security-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .security-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .security-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            color: #2d3748;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #667eea;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .password-strength {
+            margin-top: 10px;
+            max-width: 400px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .strength-fill.weak {
+            width: 33%;
+            background: #ff4d4f;
+        }
+
+        .strength-fill.medium {
+            width: 66%;
+            background: #faad14;
+        }
+
+        .strength-fill.strong {
+            width: 100%;
+            background: #52c41a;
+        }
+
+        .strength-text {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .btn-primary {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .security-tips {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .tips-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tips-list li {
+            font-size: 13px;
+            color: #718096;
+            padding: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tips-list li::before {
+            content: '•';
+            color: #667eea;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+
+    <div th:include="common/admin_header :: header"></div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                            <path d="M4 19.5C4 18.837 4.26339 18.2011 4.73223 17.7322C5.20107 17.2634 5.83696 17 6.5 17H20"/>
+                            <path d="M6.5 2H20V22H6.5C5.83696 22 5.20107 21.7366 4.73223 21.2678C4.26339 20.7989 4 20.163 4 19.5V4.5C4 3.83696 4.26339 3.20107 4.73223 2.73223C5.20107 2.26339 5.83696 2 6.5 2Z"/>
+                        </svg>
+                        书籍管理
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/addBookPage">录入新书</a></dd>
+                        <dd><a href="/addCategoryPage?pageNum=1">新建类别</a></dd>
+                        <dd><a href="/showBooksPage">查询书籍</a></dd>
+                    </dl>
+                </li>
+
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                            <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        用户管理
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/showUsersPage?pageNum=1">查询用户</a></dd>
+                        <dd><a href="/addUserPage">新增用户</a></dd>
+                    </dl>
+                </li>
+
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                            <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z"/>
+                            <path d="M14 2V8H20"/>
+                        </svg>
+                        借阅信息
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/allBorrowBooksRecordPage?pageNum=1">所有记录</a></dd>
+                    </dl>
+                </li>
+
+                <li class="layui-nav-item layui-this">
+                    <a href="/adminInfoPage">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                            <path d="M12 15C15.866 15 19 11.866 19 8C19 4.13401 15.866 1 12 1C8.13401 1 5 4.13401 5 8C5 11.866 8.13401 15 12 15Z"/>
+                            <path d="M8.21 13.89L7 23L12 20L17 23L15.79 13.88"/>
+                        </svg>
+                        个人信息
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <div class="security-container">
+            <div class="security-header">
+                <h1 class="security-title">安全设置</h1>
+                <p class="security-subtitle">管理管理员账户安全，定期修改密码保护系统安全</p>
+            </div>
+
+            <div class="security-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <circle cx="12" cy="16" r="1"/>
+                            <path d="M7 11V7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7V11"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="card-title">修改密码</h2>
+                        <p class="card-desc">请输入当前密码和新密码来修改管理员登录密码</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form id="passwordForm">
+                        <input type="hidden" name="adminId" th:value="${session.admin.getAdminId()}">
+                        
+                        <div class="form-group">
+                            <label class="form-label">当前密码</label>
+                            <input type="password" name="oldPassword" id="oldPassword" class="form-input" 
+                                   placeholder="请输入当前密码" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">新密码</label>
+                            <input type="password" name="newPassword" id="newPassword" class="form-input" 
+                                   placeholder="请输入新密码" required>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-fill" id="strengthFill"></div>
+                                </div>
+                                <span class="strength-text" id="strengthText">请输入密码</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">确认新密码</label>
+                            <input type="password" name="confirmPassword" id="confirmPassword" class="form-input" 
+                                   placeholder="请再次输入新密码" required>
+                        </div>
+
+                        <button type="button" id="changePwdBtn" class="btn-primary">
+                            <span>确认修改</span>
+                        </button>
+                    </form>
+
+                    <div class="security-tips">
+                        <h3 class="tips-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16V12"/>
+                                <path d="M12 8H12.01"/>
+                            </svg>
+                            管理员密码安全提示
+                        </h3>
+                        <ul class="tips-list">
+                            <li>管理员密码长度至少8位，必须包含字母、数字和特殊字符</li>
+                            <li>不要使用容易被猜到的密码，如生日、手机号等</li>
+                            <li>建议每30天修改一次密码，保护系统安全</li>
+                            <li>不要将密码告诉他人或在多个系统使用相同密码</li>
+                            <li>发现密码泄露风险时应立即修改密码</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:include="common/footer :: footer"></div>
+
+</div>
+
+<script src="/scripts/jquery.min.js"></script>
+<script src="/layui/layui.js"></script>
+<script th:inline="javascript">
+    layui.use(['layer'], function () {
+        let layer = layui.layer;
+
+        $("#newPassword").on('input', function() {
+            let password = $(this).val();
+            let strength = checkPasswordStrength(password);
+            updateStrengthIndicator(strength);
+        });
+
+        function checkPasswordStrength(password) {
+            if (password.length === 0) return 0;
+            if (password.length < 6) return 1;
+            
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\d/.test(password)) strength++;
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+            
+            if (strength <= 2) return 1;
+            if (strength <= 4) return 2;
+            return 3;
+        }
+
+        function updateStrengthIndicator(strength) {
+            let $fill = $('#strengthFill');
+            let $text = $('#strengthText');
+            
+            $fill.removeClass('weak medium strong');
+            
+            if (strength === 0) {
+                $fill.css('width', '0');
+                $text.text('请输入密码');
+            } else if (strength === 1) {
+                $fill.addClass('weak');
+                $text.text('密码强度：弱');
+            } else if (strength === 2) {
+                $fill.addClass('medium');
+                $text.text('密码强度：中');
+            } else {
+                $fill.addClass('strong');
+                $text.text('密码强度：强');
+            }
+        }
+
+        $("#changePwdBtn").click(function () {
+            let oldPassword = $("#oldPassword").val();
+            let newPassword = $("#newPassword").val();
+            let confirmPassword = $("#confirmPassword").val();
+            let adminId = $("input[name='adminId']").val();
+
+            if (!oldPassword) {
+                layer.msg("请输入当前密码", {icon: 0, time: 2000});
+                return;
+            }
+
+            if (!newPassword) {
+                layer.msg("请输入新密码", {icon: 0, time: 2000});
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                layer.msg("新密码长度至少6位", {icon: 0, time: 2000});
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                layer.msg("两次输入的密码不一致", {icon: 0, time: 2000});
+                return;
+            }
+
+            $.ajax({
+                url: '/updateAdminPassword',
+                type: 'POST',
+                data: {
+                    adminId: adminId,
+                    oldPassword: oldPassword,
+                    newPassword: newPassword
+                },
+                success: function (result) {
+                    if (result === "success") {
+                        layer.msg("密码修改成功", {
+                            icon: 1,
+                            time: 2000
+                        }, function () {
+                            location.href = '/adminIndex';
+                        });
+                    } else if (result === "wrong") {
+                        layer.msg("当前密码错误", {icon: 2, time: 2000});
+                    } else {
+                        layer.msg("密码修改失败", {icon: 2, time: 2000});
+                    }
+                },
+                error: function () {
+                    layer.msg("网络错误", {icon: 2, time: 2000});
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

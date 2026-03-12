@@ -2,113 +2,359 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>管理员-图书管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员信息 - 图书管理系统</title>
     <link href="/layui/css/layui.css" rel="stylesheet"/>
+    <link href="/css/modern-style.css" rel="stylesheet"/>
+    <style>
+        .profile-container {
+            padding: 20px;
+        }
 
+        .profile-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 20px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-role {
+            font-size: 14px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            color: #2d3748;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #f093fb;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(240, 147, 251, 0.1);
+        }
+
+        .form-input:disabled {
+            background: #edf2f7;
+            cursor: not-allowed;
+        }
+
+        .form-input.editable {
+            background: #fff;
+            border-color: #f093fb;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn-primary {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.5);
+        }
+
+        .btn-secondary {
+            padding: 14px 32px;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            color: #4a5568;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: #f093fb;
+            color: #f093fb;
+        }
+
+        .btn-edit {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(17, 153, 142, 0.5);
+        }
+
+        .info-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .edit-mode .form-input:disabled {
+            background: #fff;
+            cursor: text;
+            border-color: #f093fb;
+        }
+    </style>
 </head>
-
+<body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
 
     <div th:include="common/admin_header :: header"></div>
 
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
-            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree">
-
-                <li class="layui-nav-item ">
-                    <a class="" href="javascript:;">书籍管理</a>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                            <path d="M4 19.5C4 18.837 4.26339 18.2011 4.73223 17.7322C5.20107 17.2634 5.83696 17 6.5 17H20"/>
+                            <path d="M6.5 2H20V22H6.5C5.83696 22 5.20107 21.7366 4.73223 21.2678C4.26339 20.7989 4 20.163 4 19.5V4.5C4 3.83696 4.26339 3.20107 4.73223 2.73223C5.20107 2.26339 5.83696 2 6.5 2Z"/>
+                        </svg>
+                        书籍管理
+                    </a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/addBookPage">&emsp;&emsp;录入新书</a></dd>
-                        <dd><a href="/addCategoryPage?pageNum=1">&emsp;&emsp;新建类别</a></dd>
-                        <dd><a href="/showBooksPage">&emsp;&emsp;查询书籍</a></dd>
+                        <dd><a href="/addBookPage">录入新书</a></dd>
+                        <dd><a href="/addCategoryPage?pageNum=1">新建类别</a></dd>
+                        <dd><a href="/showBooksPage">查询书籍</a></dd>
                     </dl>
                 </li>
 
                 <li class="layui-nav-item">
-                    <a class="" href="javascript:;">用户管理</a>
+                    <a href="javascript:;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                            <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        用户管理
+                    </a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/showUsersPage?pageNum=1">&emsp;&emsp;查询用户</a></dd>
-                        <dd><a href="/addUserPage">&emsp;&emsp;新增用户</a></dd>
+                        <dd><a href="/showUsersPage?pageNum=1">查询用户</a></dd>
+                        <dd><a href="/addUserPage">新增用户</a></dd>
                     </dl>
                 </li>
 
-                <li class="layui-nav-item ">
-                    <a class="" href="javascript:;">借阅信息</a>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                            <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z"/>
+                            <path d="M14 2V8H20"/>
+                        </svg>
+                        借阅信息
+                    </a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/allBorrowBooksRecordPage?pageNum=1">&emsp;&emsp;所有记录</a></dd>
+                        <dd><a href="/allBorrowBooksRecordPage?pageNum=1">所有记录</a></dd>
                     </dl>
                 </li>
 
-                <li class="layui-nav-item  layui-nav-itemed"><a class="" href="/adminInfoPage">个人信息</a></li>
+                <li class="layui-nav-item layui-this">
+                    <a href="/adminInfoPage">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                            <path d="M12 15C15.866 15 19 11.866 19 8C19 4.13401 15.866 1 12 1C8.13401 1 5 4.13401 5 8C5 11.866 8.13401 15 12 15Z"/>
+                            <path d="M8.21 13.89L7 23L12 20L17 23L15.79 13.88"/>
+                        </svg>
+                        个人信息
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 
-    <div class="layui-body layui-container">
-
-        <hr class="layui-bg-blue">
-        <h3 style="font-size: xx-large; text-align: center"> 管 理 员 信 息 </h3>
-        <hr class="layui-bg-blue">
-
-        <div class="layui-row">
-            <div class="layui-col-md8 layui-col-lg-offset2">
-                <table class="layui-table">
-                    <thead>
-                    <tr>
-                        <th>管理员id</th>
-                        <th>管理员姓名</th>
-                        <th>管理员邮箱</th>
-                        <th>管理员密码</th>
-                    </tr>
-                    </thead>
-
-                    <tr>
-                        <td><b th:text="${session.admin.getAdminId()}"></b></td>
-                        <td><b th:text="${session.admin.getAdminName()}"></b></td>
-                        <td><b th:text="${session.admin.getAdminEmail()}"></b></td>
-                        <td><b th:text="${session.admin.getAdminPwd()}"></b></td>
-                    </tr>
-                </table>
+    <div class="layui-body">
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-avatar" th:text="${#strings.substring(session.admin.getAdminName(), 0, 1)}"></div>
+                <h1 class="profile-name" th:text="${session.admin.getAdminName()}"></h1>
+                <p class="profile-role">
+                    <span class="info-badge">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 15C15.866 15 19 11.866 19 8C19 4.13401 15.866 1 12 1C8.13401 1 5 4.13401 5 8C5 11.866 8.13401 15 12 15Z"/>
+                            <path d="M8.21 13.89L7 23L12 20L17 23L15.79 13.88"/>
+                        </svg>
+                        系统管理员
+                    </span>
+                </p>
             </div>
-        </div>
 
-        <div class="layui-row">
-            <button id="modify-admin" class="layui-btn" style="display: block; margin: 10px auto;">修改信息</button>
-        </div>
-
-        <div id="window" title="修改信息" style="margin: 5%; display: none">
-            <form id="updateAdminForm" class="layui-form">
-
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">名字</label>
-
-                    <div class="layui-input-block">
-                        <input type="text" name="adminName" th:value="${session.admin.getAdminName()}" id="name"
-                               class="layui-input">
+            <div class="profile-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <path d="M12 15C15.866 15 19 11.866 19 8C19 4.13401 15.866 1 12 1C8.13401 1 5 4.13401 5 8C5 11.866 8.13401 15 12 15Z"/>
+                            <path d="M8.21 13.89L7 23L12 20L17 23L15.79 13.88"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="card-title">基本资料</h2>
+                        <p class="card-desc">查看和修改管理员信息</p>
                     </div>
                 </div>
+                <div class="card-body" id="profileCardBody">
+                    <form id="profileForm">
+                        <input type="hidden" name="adminId" th:value="${session.admin.getAdminId()}">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">管理员账号</label>
+                                <input type="text" name="adminName" class="form-input" 
+                                       th:value="${session.admin.getAdminName()}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">电子邮箱</label>
+                                <input type="email" name="adminEmail" class="form-input" 
+                                       th:value="${session.admin.getAdminEmail()}" placeholder="请输入电子邮箱" disabled>
+                            </div>
+                        </div>
 
-                <div class="layui-form-item">
-                    <label class="layui-form-label">邮箱</label>
+                        <div class="btn-group" id="viewBtnGroup">
+                            <button type="button" id="editBtn" class="btn-edit">
+                                <span>修改信息</span>
+                            </button>
+                        </div>
 
-                    <div class="layui-input-block">
-                        <input type="text" name="adminEmail" th:value="${session.admin.getAdminEmail()}" id="email"
-                               class="layui-input">
-                    </div>
+                        <div class="btn-group" id="editBtnGroup" style="display: none;">
+                            <button type="button" id="saveBtn" class="btn-primary">
+                                <span>保存修改</span>
+                            </button>
+                            <button type="button" id="cancelBtn" class="btn-secondary">
+                                <span>取消</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">密码</label>
-
-                    <div class="layui-input-block">
-                        <input type="text" name="adminPwd" id="password" class="layui-input"
-                               th:value="${session.admin.getAdminPwd()}">
-                    </div>
-                </div>
-
-            </form>
+            </div>
         </div>
     </div>
 
@@ -118,8 +364,61 @@
 
 <script src="/scripts/jquery.min.js"></script>
 <script src="/layui/layui.js"></script>
-<script src="/scripts/admin/adminInfo.js"></script>
+<script th:inline="javascript">
+    layui.use(['layer', 'form'], function () {
+        let layer = layui.layer;
+        let form = layui.form;
+        let isEditMode = false;
 
+        $("#editBtn").click(function () {
+            isEditMode = true;
+            $("input[name='adminEmail']").prop('disabled', false).addClass('editable');
+            $("#viewBtnGroup").hide();
+            $("#editBtnGroup").show();
+            $("#profileCardBody").addClass('edit-mode');
+        });
+
+        $("#cancelBtn").click(function () {
+            isEditMode = false;
+            location.reload();
+        });
+
+        $("#saveBtn").click(function () {
+            let formData = $("#profileForm").serialize();
+            
+            $.ajax({
+                url: '/updateAdminMessage',
+                type: 'POST',
+                data: formData,
+                success: function (result) {
+                    if (result === "success") {
+                        layer.msg("修改成功", {
+                            icon: 1,
+                            time: 2000
+                        }, function () {
+                            location.reload();
+                        });
+                    } else {
+                        layer.msg("修改失败", {
+                            icon: 2,
+                            time: 2000
+                        });
+                    }
+                },
+                error: function () {
+                    layer.msg("网络错误", {
+                        icon: 2,
+                        time: 2000
+                    });
+                }
+            });
+        });
+
+        $("#resetBtn").click(function () {
+            location.reload();
+        });
+    });
+</script>
 
 </body>
 </html>

@@ -2,9 +2,180 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>普通用户-图书管理系统</title>
     <link href="/layui/css/layui.css" rel="stylesheet"/>
+    <link href="/css/modern-style.css" rel="stylesheet"/>
+    <style>
+        .welcome-section {
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 20px;
+            border-radius: 16px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
 
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .welcome-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 0 20px 20px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-icon.borrow {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-icon.return {
+            background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+        }
+
+        .stat-icon.search {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .stat-icon.record {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .carousel-section {
+            margin: 20px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+
+        .carousel-section .layui-carousel {
+            border-radius: 16px;
+        }
+
+        .carousel-section img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+        }
+
+        .quick-actions {
+            padding: 0 20px 20px;
+        }
+
+        .quick-actions-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quick-actions-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            border-color: #667eea;
+        }
+
+        .action-btn svg {
+            margin-bottom: 12px;
+        }
+
+        .action-btn span {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+    </style>
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
@@ -13,37 +184,142 @@
 
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
-            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree">
-
-                <li class="layui-nav-item ">
-                    <a class="" href="javascript:;">借阅管理</a>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                            <path d="M4 19.5C4 18.837 4.26339 18.2011 4.73223 17.7322C5.20107 17.2634 5.83696 17 6.5 17H20"/>
+                            <path d="M6.5 2H20V22H6.5C5.83696 22 5.20107 21.7366 4.73223 21.2678C4.26339 20.7989 4 20.163 4 19.5V4.5C4 3.83696 4.26339 3.20107 4.73223 2.73223C5.20107 2.26339 5.83696 2 6.5 2Z"/>
+                        </svg>
+                        借阅管理
+                    </a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/userBorrowBookRecord">&emsp;&emsp;借书记录</a></dd>
-                        <dd><a href="/borrowingPage">&emsp;&emsp;借阅书籍</a></dd>
+                        <dd><a href="/userBorrowBookRecord">借书记录</a></dd>
+                        <dd><a href="/borrowingPage">借阅书籍</a></dd>
                     </dl>
                 </li>
 
-                <li class="layui-nav-item ">
-                    <a class="" href="javascript:;">书籍管理</a>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21L16.65 16.65"/>
+                        </svg>
+                        书籍管理
+                    </a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/userReturnBooksPage">&emsp;&emsp;归还书籍</a></dd>
-                        <dd><a href="/findBookPage">&emsp;&emsp;查询书籍</a></dd>
+                        <dd><a href="/userReturnBooksPage">归还书籍</a></dd>
+                        <dd><a href="/findBookPage">查询书籍</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a href="/userMessagePage">个人信息</a></li>
+                <li class="layui-nav-item">
+                    <a href="/userMessagePage">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                            <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        个人信息
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 
-    <div class="layui-body layui-container">
-        <div class="layui-carousel layui-container" id="index" style="margin-top: 40px;">
-            <div carousel-item>
-                <div><img src="/images/lib1.jpg"/></div>
-                <div><img src="/images/lib2.jpg"/></div>
-                <div><img src="/images/lib3.jpg"/></div>
-                <div><img src="/images/lib4.jpg"/></div>
-                <div><img src="/images/lib5.jpg"/></div>
+    <div class="layui-body">
+        <div class="welcome-section">
+            <h1 class="welcome-title">欢迎回来，<span th:text="${session.user.getUserName()}"></span>！</h1>
+            <p class="welcome-subtitle">今天是阅读的好日子，让我们一起探索知识的海洋</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon borrow">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M4 19.5C4 18.837 4.26339 18.2011 4.73223 17.7322C5.20107 17.2634 5.83696 17 6.5 17H20"/>
+                        <path d="M6.5 2H20V22H6.5C5.83696 22 5.20107 21.7366 4.73223 21.2678C4.26339 20.7989 4 20.163 4 19.5V4.5C4 3.83696 4.26339 3.20107 4.73223 2.73223C5.20107 2.26339 5.83696 2 6.5 2Z"/>
+                    </svg>
+                </div>
+                <div class="stat-value">借阅书籍</div>
+                <div class="stat-label">快速借阅您需要的书籍</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon return">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <polyline points="1 4 1 10 7 10"/>
+                        <path d="M3.51 15C4.15839 16.8404 5.38734 18.4202 7.01166 19.5014C8.63598 20.5826 10.5677 21.1066 12.5157 20.9945C14.4637 20.8824 16.3226 20.1402 17.8121 18.8798C19.3017 17.6193 20.3413 15.9082 20.7742 14.0064C21.2072 12.1046 21.0101 10.1139 20.2126 8.33122C19.4152 6.54852 18.0605 5.06994 16.3528 4.12021C14.6451 3.17047 12.6769 2.79956 10.7447 3.06444C8.81245 3.32932 7.01938 4.21512 5.64 5.59L1 10"/>
+                    </svg>
+                </div>
+                <div class="stat-value">归还书籍</div>
+                <div class="stat-label">按时归还，保持良好信用</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon search">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21L16.65 16.65"/>
+                    </svg>
+                </div>
+                <div class="stat-value">查询书籍</div>
+                <div class="stat-label">搜索您感兴趣的书籍</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon record">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z"/>
+                        <path d="M14 2V8H20"/>
+                        <path d="M16 13H8"/>
+                        <path d="M16 17H8"/>
+                        <path d="M10 9H9H8"/>
+                    </svg>
+                </div>
+                <div class="stat-value">借阅记录</div>
+                <div class="stat-label">查看您的借阅历史</div>
+            </div>
+        </div>
+
+        <div class="carousel-section">
+            <div class="layui-carousel" id="index">
+                <div carousel-item>
+                    <div><img src="/images/lib1.jpg"/></div>
+                    <div><img src="/images/lib2.jpg"/></div>
+                    <div><img src="/images/lib3.jpg"/></div>
+                    <div><img src="/images/lib4.jpg"/></div>
+                    <div><img src="/images/lib5.jpg"/></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <h3 class="quick-actions-title">快捷操作</h3>
+            <div class="action-buttons">
+                <a href="/borrowingPage" class="action-btn">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2">
+                        <path d="M4 19.5C4 18.837 4.26339 18.2011 4.73223 17.7322C5.20107 17.2634 5.83696 17 6.5 17H20"/>
+                        <path d="M6.5 2H20V22H6.5C5.83696 22 5.20107 21.7366 4.73223 21.2678C4.26339 20.7989 4 20.163 4 19.5V4.5C4 3.83696 4.26339 3.20107 4.73223 2.73223C5.20107 2.26339 5.83696 2 6.5 2Z"/>
+                    </svg>
+                    <span>借阅书籍</span>
+                </a>
+                <a href="/userReturnBooksPage" class="action-btn">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
+                        <polyline points="1 4 1 10 7 10"/>
+                        <path d="M3.51 15C4.15839 16.8404 5.38734 18.4202 7.01166 19.5014C8.63598 20.5826 10.5677 21.1066 12.5157 20.9945C14.4637 20.8824 16.3226 20.1402 17.8121 18.8798C19.3017 17.6193 20.3413 15.9082 20.7742 14.0064C21.2072 12.1046 21.0101 10.1139 20.2126 8.33122C19.4152 6.54852 18.0605 5.06994 16.3528 4.12021C14.6451 3.17047 12.6769 2.79956 10.7447 3.06444C8.81245 3.32932 7.01938 4.21512 5.64 5.59L1 10"/>
+                    </svg>
+                    <span>归还书籍</span>
+                </a>
+                <a href="/findBookPage" class="action-btn">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f093fb" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21L16.65 16.65"/>
+                    </svg>
+                    <span>查询书籍</span>
+                </a>
+                <a href="/userBorrowBookRecord" class="action-btn">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4facfe" stroke-width="2">
+                        <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z"/>
+                        <path d="M14 2V8H20"/>
+                    </svg>
+                    <span>借阅记录</span>
+                </a>
             </div>
         </div>
     </div>
@@ -55,21 +331,19 @@
 <script src="/scripts/jquery.min.js"></script>
 <script src="/layui/layui.js"></script>
 <script>
-
     layui.use(['carousel', 'element'], function () {
         let carousel = layui.carousel;
         let element = layui.element;
-        //建造实例
+        
         carousel.render({
-            elem: '#index'
-            , width: '900' //设置容器宽度
-            , height: '550px' //设置容器高度
-            // , full:'true' //是否全屏轮播,默认false
-            // , arrow: 'always' //始终显示箭头和点击按钮
-            // ,anim: 'updown' //切换动画方式，可从各个方向滚动
+            elem: '#index',
+            width: '100%',
+            height: '450px',
+            arrow: 'hover',
+            anim: 'fade',
+            interval: 4000
         });
     });
-
 </script>
 
 </body>

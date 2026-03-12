@@ -7,6 +7,7 @@ import com.zbw.domain.Vo.BookVo;
 import com.zbw.service.IAdminService;
 import com.zbw.service.IBookCategoryService;
 import com.zbw.service.IUserService;
+import com.zbw.utils.VerifyCodeUtils;
 import com.zbw.utils.page.Page;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
@@ -54,16 +55,18 @@ public class AdminController {
      * @return
      */
     @PostMapping("/adminLogin")
-    public String adminLogin(@Param("userName") String userName, @Param("password") String password, HttpServletRequest request) {
+    public String adminLogin(@Param("userName") String userName, @Param("password") String password,
+                             @Param("verifyCode") String verifyCode, HttpServletRequest request) {
+        if (!VerifyCodeUtils.verifyCode(verifyCode, request)) {
+            request.getSession().setAttribute("flag", 2);
+            return "index";
+        }
         Admin admin = adminService.adminLogin(userName, password);
 
         if (admin == null) {
-            // flag 为 1 表示 登录失败 
             request.getSession().setAttribute("flag", 1);
             return "index";
         }
-
-        // flag = 0 表示用户名密码校验成功
         request.getSession().setAttribute("flag", 0);
         request.getSession().setAttribute("admin", admin);
         return "admin/index";

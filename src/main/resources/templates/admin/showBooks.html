@@ -91,7 +91,10 @@
                         <th>状态</th>
                     </tr>
                     </thead>
-
+                    <tbody>
+                    <tr th:if="${page.getList() == null || page.getList().isEmpty()}">
+                        <td colspan="5" style="text-align: center; color: #FF5722;">未找到相关书籍</td>
+                    </tr>
                     <tr th:each="book:${page.getList()}">
                         <td><label th:text="${book.getBookId()}"></label></td>
                         <td><label th:text="${book.getBookName()}"></label></td>
@@ -100,7 +103,7 @@
                         <td><label th:text="${book.getIsExist()}"></label></td>
                     </tr>
 
-                    <tr>
+                    <tr th:unless="${page.getList() == null || page.getList().isEmpty()}">
                         <td colspan="5">
                             <div style="margin: auto; width: 160px;">
 
@@ -121,6 +124,7 @@
 
                         </td>
                     </tr>
+                    </tbody>
                 </table>
             </div>
         </div>

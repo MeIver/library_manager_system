@@ -50,6 +50,36 @@
             <button class="layui-btn layui-bg-blue" id="btn1">确认还书</button>
         </div>
 
+        <div style="margin-top: 30px;">
+            <hr class="layui-bg-blue">
+            <h3 style="text-align: center;"> 我 的 借 阅 书 籍 </h3>
+            <hr class="layui-bg-blue">
+
+            <table class="layui-table" lay-size="sm">
+                <thead>
+                <tr>
+                    <th>书籍编号</th>
+                    <th>书名</th>
+                    <th>作者</th>
+                    <th>出版社</th>
+                    <th>借书日期</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${borrowingBooksList.isEmpty()}">
+                    <td colspan="5" style="text-align: center;">暂无借阅书籍</td>
+                </tr>
+                <tr th:each="borrowing:${borrowingBooksList}">
+                    <td><label th:text="${borrowing.getBook().getBookId()}"></label></td>
+                    <td><label th:text="${borrowing.getBook().getBookName()}"></label></td>
+                    <td><label th:text="${borrowing.getBook().getBookAuthor()}"></label></td>
+                    <td><label th:text="${borrowing.getBook().getBookPublish()}"></label></td>
+                    <td><label th:text="${borrowing.getDateOfBorrowing()}"></label></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
     <div th:include="common/footer :: footer"></div>

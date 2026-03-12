@@ -73,7 +73,10 @@
                         <th>状态</th>
                     </tr>
                     </thead>
-
+                    <tbody>
+                    <tr th:if="${bookList == null || bookList.isEmpty()}">
+                        <td colspan="5" style="text-align: center; color: #FF5722;">未找到相关书籍</td>
+                    </tr>
                     <tr th:each="book:${bookList}">
                         <td><label th:text="${book.getBookId()}"></label></td>
                         <td><label th:text="${book.getBookName()}"></label></td>
@@ -81,6 +84,7 @@
                         <td><label th:text="${book.getBookPublish()}"></label></td>
                         <td><label th:text="${book.getIsExist()}"></label></td>
                     </tr>
+                    </tbody>
                 </table>
             </div>
         </div>

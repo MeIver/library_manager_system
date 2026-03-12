@@ -26,4 +26,14 @@ public interface IAdminService {
 
     // 更新管理员信息
     boolean updateAdmin(Admin admin, HttpServletRequest request);
+
+    /**
+     * 修改管理员密码
+     *
+     * @param adminId     管理员ID
+     * @param oldPassword 原密码（已加密）
+     * @param newPassword 新密码（已加密）
+     * @return 是否修改成功
+     */
+    boolean updateAdminPassword(int adminId, String oldPassword, String newPassword);
 }

@@ -42,4 +42,14 @@ public interface IUserService {
 
     //根据用户id删除用户
     int deleteUserById(int userId);
+
+    /**
+     * 修改用户密码
+     *
+     * @param userId      用户ID
+     * @param oldPassword 原密码（已加密）
+     * @param newPassword 新密码（已加密）
+     * @return 是否修改成功
+     */
+    boolean updateUserPassword(int userId, String oldPassword, String newPassword);
 }

@@ -204,6 +204,44 @@ public class UserController {
         return "user/findBook";
     }
 
+    /**
+     * 返回用户安全设置页面
+     */
+    @RequestMapping("/userSecurityPage")
+    public String userSecurityPage() {
+        return "user/userSecurity";
+    }
+
+    /**
+     * 修改用户密码
+     *
+     * @param oldPassword  原密码
+     * @param newPassword  新密码
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateUserPassword")
+    @ResponseBody
+    public java.util.Map<String, Object> updateUserPassword(
+            @RequestParam("oldPassword") String oldPassword,
+            @RequestParam("newPassword") String newPassword,
+            HttpServletRequest request) {
+        
+        java.util.Map<String, Object> result = new java.util.HashMap<>();
+        User sessionUser = (User) request.getSession().getAttribute("user");
+        
+        boolean success = userService.updateUserPassword(sessionUser.getUserId(), oldPassword, newPassword);
+        
+        if (success) {
+            result.put("success", true);
+            result.put("message", "密码修改成功");
+        } else {
+            result.put("success", false);
+            result.put("message", "原密码错误");
+        }
+        
+        return result;
+    }
 
     /**
      * 根据用户id删除用户

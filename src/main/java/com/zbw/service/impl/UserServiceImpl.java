@@ -202,4 +202,24 @@ public class UserServiceImpl implements IUserService {
     public int deleteUserById(int userId) {
         return userMapper.deleteByPrimaryKey(userId);
     }
+
+    @Override
+    public boolean updateUserPassword(int userId, String oldPassword, String newPassword) {
+        // 先查询用户
+        User user = userMapper.selectByPrimaryKey(userId);
+        if (user == null) {
+            return false;
+        }
+
+        // 验证原密码
+        if (!oldPassword.equals(user.getUserPwd())) {
+            return false;
+        }
+
+        // 更新密码
+        user.setUserPwd(newPassword);
+        int n = userMapper.updateByPrimaryKey(user);
+
+        return n > 0;
+    }
 }

@@ -97,4 +97,24 @@ public class AdminServiceImpl implements IAdminService {
 
         return false;
     }
+
+    @Override
+    public boolean updateAdminPassword(int adminId, String oldPassword, String newPassword) {
+        // 先查询管理员
+        Admin admin = adminMapper.selectByPrimaryKey(adminId);
+        if (admin == null) {
+            return false;
+        }
+
+        // 验证原密码
+        if (!oldPassword.equals(admin.getAdminPwd())) {
+            return false;
+        }
+
+        // 更新密码
+        admin.setAdminPwd(newPassword);
+        int n = adminMapper.updateByPrimaryKey(admin);
+
+        return n > 0;
+    }
 }

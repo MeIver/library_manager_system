@@ -151,7 +151,46 @@ public class AdminController {
     public String adminInfo() {
         return "admin/adminInfo";
     }
-    
+
+    /**
+     * 返回管理员安全设置页面
+     */
+    @RequestMapping("/adminSecurityPage")
+    public String adminSecurityPage() {
+        return "admin/adminSecurity";
+    }
+
+    /**
+     * 修改管理员密码
+     *
+     * @param oldPassword  原密码
+     * @param newPassword  新密码
+     * @param request
+     * @return
+     */
+    @RequestMapping("/updateAdminPassword")
+    @ResponseBody
+    public java.util.Map<String, Object> updateAdminPassword(
+            @RequestParam("oldPassword") String oldPassword,
+            @RequestParam("newPassword") String newPassword,
+            HttpServletRequest request) {
+
+        java.util.Map<String, Object> result = new java.util.HashMap<>();
+        Admin sessionAdmin = (Admin) request.getSession().getAttribute("admin");
+
+        boolean success = adminService.updateAdminPassword(sessionAdmin.getAdminId(), oldPassword, newPassword);
+
+        if (success) {
+            result.put("success", true);
+            result.put("message", "密码修改成功");
+        } else {
+            result.put("success", false);
+            result.put("message", "原密码错误");
+        }
+
+        return result;
+    }
+
     /**
      * 更新管理员信息
      *

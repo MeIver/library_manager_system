@@ -2,113 +2,458 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>管理员-图书管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基本资料 - 图书管理系统</title>
     <link href="/layui/css/layui.css" rel="stylesheet"/>
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --sidebar-bg: #1a1f2e;
+            --text-light: #ffffff;
+            --text-muted: #a0aec0;
+            --hover-bg: rgba(102, 126, 234, 0.1);
+        }
 
+        body {
+            font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f7fa;
+        }
+
+        .layui-side {
+            background: var(--sidebar-bg) !important;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+        }
+
+        .layui-nav-tree {
+            background: transparent !important;
+        }
+
+        .layui-nav-tree .layui-nav-item a {
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .layui-nav-tree .layui-nav-item a:hover {
+            color: var(--text-light);
+            background: var(--hover-bg);
+            border-left-color: var(--primary-color);
+        }
+
+        .layui-nav-tree .layui-nav-itemed > a,
+        .layui-nav-tree .layui-this > a {
+            color: var(--text-light) !important;
+            background: linear-gradient(90deg, var(--hover-bg) 0%, transparent 100%) !important;
+            border-left-color: var(--primary-color);
+        }
+
+        .layui-nav-tree .layui-nav-child {
+            background: rgba(0,0,0,0.15) !important;
+        }
+
+        .layui-nav-tree .layui-nav-child dd.layui-this,
+        .layui-nav-tree .layui-nav-child dd.layui-this a {
+            background: var(--primary-color) !important;
+            color: white !important;
+        }
+
+        .layui-body {
+            background: #f5f7fa;
+            padding: 20px;
+            bottom: 0;
+        }
+
+        /* 页面标题 */
+        .page-header {
+            background: white;
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* 个人信息卡片 */
+        .profile-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 992px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 左侧卡片 */
+        .profile-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #f0f0f0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .avatar-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            border: 3px solid white;
+        }
+
+        .user-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .user-role {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 4px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        .user-id {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .profile-actions {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #666;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .action-btn:hover {
+            background: var(--hover-bg);
+            color: var(--primary-color);
+        }
+
+        .action-btn i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        /* 右侧信息卡片 */
+        .info-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .edit-btn {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-item {
+            display: flex;
+            padding: 18px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            width: 120px;
+            color: #888;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-label i {
+            margin-right: 8px;
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+
+        .info-value {
+            flex: 1;
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* 编辑表单模态框 */
+        .edit-modal {
+            display: none;
+        }
+
+        .layui-layer-content {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 45px;
+            border: 2px solid #e8e8e8;
+            border-radius: 10px;
+            padding: 0 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+    </style>
 </head>
-
+<body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
 
     <div th:include="common/admin_header :: header"></div>
 
-    <div class="layui-side layui-bg-black">
+    <div class="layui-side">
         <div class="layui-side-scroll">
-            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree">
-
-                <li class="layui-nav-item ">
-                    <a class="" href="javascript:;">书籍管理</a>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <i class="layui-icon layui-icon-read" style="margin-right: 8px;"></i>书籍管理
+                    </a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/addBookPage">&emsp;&emsp;录入新书</a></dd>
-                        <dd><a href="/addCategoryPage?pageNum=1">&emsp;&emsp;新建类别</a></dd>
-                        <dd><a href="/showBooksPage">&emsp;&emsp;查询书籍</a></dd>
+                        <dd><a href="/addBookPage">
+                            <i class="layui-icon layui-icon-add-1" style="margin-right: 5px;"></i>录入新书
+                        </a></dd>
+                        <dd><a href="/addCategoryPage?pageNum=1">
+                            <i class="layui-icon layui-icon-senior" style="margin-right: 5px;"></i>新建类别
+                        </a></dd>
+                        <dd><a href="/showBooksPage">
+                            <i class="layui-icon layui-icon-search" style="margin-right: 5px;"></i>查询书籍
+                        </a></dd>
                     </dl>
                 </li>
 
                 <li class="layui-nav-item">
-                    <a class="" href="javascript:;">用户管理</a>
+                    <a href="javascript:;">
+                        <i class="layui-icon layui-icon-username" style="margin-right: 8px;"></i>用户管理
+                    </a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/showUsersPage?pageNum=1">&emsp;&emsp;查询用户</a></dd>
-                        <dd><a href="/addUserPage">&emsp;&emsp;新增用户</a></dd>
+                        <dd><a href="/showUsersPage?pageNum=1">
+                            <i class="layui-icon layui-icon-group" style="margin-right: 5px;"></i>查询用户
+                        </a></dd>
+                        <dd><a href="/addUserPage">
+                            <i class="layui-icon layui-icon-add-circle" style="margin-right: 5px;"></i>新增用户
+                        </a></dd>
                     </dl>
                 </li>
 
-                <li class="layui-nav-item ">
-                    <a class="" href="javascript:;">借阅信息</a>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <i class="layui-icon layui-icon-form" style="margin-right: 8px;"></i>借阅信息
+                    </a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/allBorrowBooksRecordPage?pageNum=1">&emsp;&emsp;所有记录</a></dd>
+                        <dd><a href="/allBorrowBooksRecordPage?pageNum=1">
+                            <i class="layui-icon layui-icon-list" style="margin-right: 5px;"></i>所有记录
+                        </a></dd>
                     </dl>
                 </li>
 
-                <li class="layui-nav-item  layui-nav-itemed"><a class="" href="/adminInfoPage">个人信息</a></li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="/adminInfoPage">
+                        <i class="layui-icon layui-icon-username" style="margin-right: 8px;"></i>个人信息
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 
-    <div class="layui-body layui-container">
-
-        <hr class="layui-bg-blue">
-        <h3 style="font-size: xx-large; text-align: center"> 管 理 员 信 息 </h3>
-        <hr class="layui-bg-blue">
-
-        <div class="layui-row">
-            <div class="layui-col-md8 layui-col-lg-offset2">
-                <table class="layui-table">
-                    <thead>
-                    <tr>
-                        <th>管理员id</th>
-                        <th>管理员姓名</th>
-                        <th>管理员邮箱</th>
-                        <th>管理员密码</th>
-                    </tr>
-                    </thead>
-
-                    <tr>
-                        <td><b th:text="${session.admin.getAdminId()}"></b></td>
-                        <td><b th:text="${session.admin.getAdminName()}"></b></td>
-                        <td><b th:text="${session.admin.getAdminEmail()}"></b></td>
-                        <td><b th:text="${session.admin.getAdminPwd()}"></b></td>
-                    </tr>
-                </table>
+    <div class="layui-body">
+        <!-- 页面标题 -->
+        <div class="page-header">
+            <div class="page-title">
+                <i class="layui-icon layui-icon-username" style="color: var(--primary-color); margin-right: 10px;"></i>
+                基本资料
             </div>
+            <div class="page-subtitle">查看和管理您的个人信息</div>
         </div>
 
-        <div class="layui-row">
-            <button id="modify-admin" class="layui-btn" style="display: block; margin: 10px auto;">修改信息</button>
-        </div>
-
-        <div id="window" title="修改信息" style="margin: 5%; display: none">
-            <form id="updateAdminForm" class="layui-form">
-
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">名字</label>
-
-                    <div class="layui-input-block">
-                        <input type="text" name="adminName" th:value="${session.admin.getAdminName()}" id="name"
-                               class="layui-input">
+        <!-- 个人信息容器 -->
+        <div class="profile-container">
+            <!-- 左侧个人卡片 -->
+            <div class="profile-card">
+                <div class="avatar-wrapper">
+                    <img src="/images/user_image.jpg" alt="头像" class="avatar">
+                    <div class="avatar-badge">
+                        <i class="layui-icon layui-icon-ok"></i>
                     </div>
                 </div>
+                <div class="user-name" th:text="${session.admin.getAdminName()}">管理员</div>
+                <div class="user-role">管理员</div>
+                <div class="user-id">ID: <span th:text="${session.admin.getAdminId()}">0000</span></div>
 
-                <div class="layui-form-item">
-                    <label class="layui-form-label">邮箱</label>
+                <div class="profile-actions">
+                    <a href="javascript:;" id="editProfileBtn" class="action-btn primary">
+                        <i class="layui-icon layui-icon-edit"></i>编辑资料
+                    </a>
+                    <a href="/adminSecurityPage" class="action-btn">
+                        <i class="layui-icon layui-icon-password"></i>修改密码
+                    </a>
+                </div>
+            </div>
 
-                    <div class="layui-input-block">
-                        <input type="text" name="adminEmail" th:value="${session.admin.getAdminEmail()}" id="email"
-                               class="layui-input">
+            <!-- 右侧信息卡片 -->
+            <div class="info-card">
+                <div class="info-header">
+                    <div class="info-title">
+                        <i class="layui-icon layui-icon-form" style="color: var(--primary-color); margin-right: 8px;"></i>
+                        详细信息
                     </div>
+                    <button id="editInfoBtn" class="edit-btn">
+                        <i class="layui-icon layui-icon-edit" style="margin-right: 5px;"></i>编辑
+                    </button>
                 </div>
 
-                <div class="layui-form-item">
-                    <label class="layui-form-label">密码</label>
-
-                    <div class="layui-input-block">
-                        <input type="text" name="adminPwd" id="password" class="layui-input"
-                               th:value="${session.admin.getAdminPwd()}">
-                    </div>
-                </div>
-
-            </form>
+                <ul class="info-list">
+                    <li class="info-item">
+                        <div class="info-label">
+                            <i class="layui-icon layui-icon-username"></i>管理员编号
+                        </div>
+                        <div class="info-value" th:text="${session.admin.getAdminId()}">--</div>
+                    </li>
+                    <li class="info-item">
+                        <div class="info-label">
+                            <i class="layui-icon layui-icon-username"></i>管理员姓名
+                        </div>
+                        <div class="info-value" th:text="${session.admin.getAdminName()}">--</div>
+                    </li>
+                    <li class="info-item">
+                        <div class="info-label">
+                            <i class="layui-icon layui-icon-email"></i>电子邮箱
+                        </div>
+                        <div class="info-value" th:text="${session.admin.getAdminEmail()}">--</div>
+                    </li>
+                    <li class="info-item">
+                        <div class="info-label">
+                            <i class="layui-icon layui-icon-date"></i>注册时间
+                        </div>
+                        <div class="info-value">--</div>
+                    </li>
+                    <li class="info-item">
+                        <div class="info-label">
+                            <i class="layui-icon layui-icon-ok-circle"></i>账户状态
+                        </div>
+                        <div class="info-value">
+                            <span style="color: #1dd1a1;">
+                                <i class="layui-icon layui-icon-ok-circle" style="margin-right: 5px;"></i>正常
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -116,10 +461,31 @@
 
 </div>
 
+<!-- 编辑信息模态框 -->
+<div id="editModal" class="edit-modal">
+    <form id="editForm">
+        <div class="form-group">
+            <label class="form-label">管理员姓名</label>
+            <input type="text" name="adminName" id="editAdminName" class="form-input"
+                   th:value="${session.admin.getAdminName()}" placeholder="请输入管理员姓名">
+        </div>
+        <div class="form-group">
+            <label class="form-label">电子邮箱</label>
+            <input type="email" name="adminEmail" id="editAdminEmail" class="form-input"
+                   th:value="${session.admin.getAdminEmail()}" placeholder="请输入电子邮箱">
+        </div>
+    </form>
+</div>
+
 <script src="/scripts/jquery.min.js"></script>
 <script src="/layui/layui.js"></script>
 <script src="/scripts/admin/adminInfo.js"></script>
-
+<script>
+    // 初始化layui导航
+    layui.use(['element'], function(){
+        var element = layui.element;
+    });
+</script>
 
 </body>
 </html>

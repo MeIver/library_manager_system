@@ -2,83 +2,402 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书管理系统 - 登录</title>
     <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            /*width: 100%;*/
-            /*height: 100%;*/
-            background: url("/images/background.png") no-repeat;
-            /*background: url("static/images/a.png") no-repeat;*/
-            background-size: cover;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
-        #login_form {
-            width: 400px;
-            height: 400px;
-            margin: 80px auto;
-            padding: 30px;
-            background-color: #f2f2f2;
-            opacity: 0.9;
+        /* 背景动画效果 */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
         }
 
+        .bg-shapes li {
+            position: absolute;
+            display: block;
+            list-style: none;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            animation: animate 25s linear infinite;
+            bottom: -150px;
+            border-radius: 50%;
+        }
+
+        .bg-shapes li:nth-child(1) {
+            left: 25%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 0s;
+        }
+
+        .bg-shapes li:nth-child(2) {
+            left: 10%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 2s;
+            animation-duration: 12s;
+        }
+
+        .bg-shapes li:nth-child(3) {
+            left: 70%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 4s;
+        }
+
+        .bg-shapes li:nth-child(4) {
+            left: 40%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 0s;
+            animation-duration: 18s;
+        }
+
+        .bg-shapes li:nth-child(5) {
+            left: 65%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 0s;
+        }
+
+        .bg-shapes li:nth-child(6) {
+            left: 75%;
+            width: 110px;
+            height: 110px;
+            animation-delay: 3s;
+        }
+
+        .bg-shapes li:nth-child(7) {
+            left: 35%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 7s;
+        }
+
+        .bg-shapes li:nth-child(8) {
+            left: 50%;
+            width: 25px;
+            height: 25px;
+            animation-delay: 15s;
+            animation-duration: 45s;
+        }
+
+        .bg-shapes li:nth-child(9) {
+            left: 20%;
+            width: 15px;
+            height: 15px;
+            animation-delay: 2s;
+            animation-duration: 35s;
+        }
+
+        .bg-shapes li:nth-child(10) {
+            left: 85%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 0s;
+            animation-duration: 11s;
+        }
+
+        @keyframes animate {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+                border-radius: 0;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 50%;
+            }
+        }
+
+        /* 登录容器 */
+        .login-container {
+            position: relative;
+            z-index: 1;
+            width: 420px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+        }
+
+        /* 标题区域 */
+        .login-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .login-header .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-header .logo i {
+            font-size: 40px;
+            color: white;
+        }
+
+        .login-header h1 {
+            font-size: 28px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* 表单样式 */
+        .layui-form-item {
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 18px;
+            z-index: 1;
+        }
+
+        .layui-input {
+            height: 50px;
+            line-height: 50px;
+            padding-left: 45px;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .layui-input:focus {
+            border-color: #667eea;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        /* 角色选择 */
+        .role-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .role-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .role-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .role-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .role-option label i {
+            font-size: 24px;
+            color: #999;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .role-option label span {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .role-option input[type="radio"]:checked + label {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+
+        .role-option input[type="radio"]:checked + label i {
+            color: #667eea;
+        }
+
+        .role-option input[type="radio"]:checked + label span {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .role-option label:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        /* 登录按钮 */
+        .login-btn {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 底部信息 */
+        .login-footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 480px) {
+            .login-container {
+                width: 90%;
+                padding: 30px 20px;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div id="wrapper">
-    <div class="layui-container" id="login_form">
+<!-- 背景动画 -->
+<ul class="bg-shapes">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
 
-        <div>
-            <h1 style="color: red">图书管理系统</h1>
-            <br>
-            <h2>用户登录</h2>
-            <br>
+<div class="login-container">
+    <div class="login-header">
+        <div class="logo">
+            <i class="layui-icon layui-icon-read"></i>
+        </div>
+        <h1>图书管理系统</h1>
+        <p>Library Management System</p>
+    </div>
+
+    <form class="layui-form" id="my_form" method="post" action="/userLogin">
+        <div class="layui-form-item">
+            <div class="input-group">
+                <i class="layui-icon layui-icon-username"></i>
+                <input type="text" name="userName" id="username" autofocus
+                       placeholder="请输入用户名" autocomplete="off" class="layui-input">
+            </div>
         </div>
 
-        <form class="layui-form" id="my_form" method="post" action="/userLogin">
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">用户名:</label>
-                <div class="layui-input-block">
-                    <input type="text" name="userName" id="username" autofocus
-                           placeholder="请输入用户名" autocomplete="off" class="layui-input">
-                </div>
+        <div class="layui-form-item">
+            <div class="input-group">
+                <i class="layui-icon layui-icon-password"></i>
+                <input type="password" name="password" id="password"
+                       placeholder="请输入密码" autocomplete="off" class="layui-input">
             </div>
+        </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">密 码:</label>
-                <div class="layui-input-block">
-                    <input type="password" name="password" id="password"
-                           placeholder="请输入密码" autocomplete="off" class="layui-input">
-                </div>
+        <div class="role-selector">
+            <div class="role-option">
+                <input type="radio" name="role" value="1" id="role_student" checked>
+                <label for="role_student">
+                    <i class="layui-icon layui-icon-username"></i>
+                    <span>学生</span>
+                </label>
             </div>
-
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">用户身份</label>
-                <div class="layui-input-block">
-                    <input class="form-check-input" type="radio" name="role" value="1" title="学生" checked>
-                    <input class="form-check-input" type="radio" name="role" value="0" title="管理员">
-                </div>
+            <div class="role-option">
+                <input type="radio" name="role" value="0" id="role_admin">
+                <label for="role_admin">
+                    <i class="layui-icon layui-icon-username"></i>
+                    <span>管理员</span>
+                </label>
             </div>
+        </div>
 
-            <div class="layui-form-item layui-col-md4 layui-col-md-offset4">
-                <button id="sub_btn" class="layui-btn layui-btn-normal">登录</button>
-            </div>
+        <div class="layui-form-item">
+            <button type="button" id="sub_btn" class="login-btn">
+                <i class="layui-icon layui-icon-ok-circle"></i> 登 录
+            </button>
+        </div>
+    </form>
 
-        </form>
-
+    <div class="login-footer">
+        <p>© 2024 图书管理系统 - 让阅读更便捷</p>
     </div>
 </div>
 
-
 <script th:src="@{/scripts/jquery.min.js}"></script>
 <script th:src="@{/layui/layui.js}"></script>
-
 
 <script th:inline="javascript">
     layui.use(['layer', 'form'], function () {
@@ -91,32 +410,26 @@
             if (flag) {
                 layer.msg("用户名或密码错误", {
                     icon: 2,
-                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    time: 2000
                 });
             }
         });
     });
 
-
     $("#sub_btn").click(function () {
         let username = $("#username").val();
         let user_judge = check(username);
 
-        // 首先判断用户名是否为空 
         if (user_judge) {
             let password = $("#password").val();
             let pwd_judge = check(password);
 
-            // 用户名不为空  , 判断密码是否为空
             if (pwd_judge) {
                 let role_id = $('input[name="role"]:checked').val();
 
-                // 如果role_id ==1 ,则是普通用户 , 直接提交表单
                 if (role_id == 1) {
                     $("#my_form").submit();
                 } else {
-
-                    //如果是管理员 , 则将action 进行更改 
                     $("#my_form").attr("action", "/adminLogin")
                     $("#my_form").submit();
                 }
@@ -126,18 +439,15 @@
                 return false;
             }
         } else {
-
             layer.alert("用户名不能为空", {icon: 5});
             return false;
         }
     });
 
-    // 校验表单中用户名 与 密码是否输入,  如果有值 -> 返回 true , 如果未输入 返回 false;
     function check(val) {
         val = val.toString().trim();
         return !(val == '');
     }
-
 </script>
 </body>
 </html>

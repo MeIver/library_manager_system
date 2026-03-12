@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安全设置 - 图书管理系统</title>
+    <link href="/layui/css/layui.css" rel="stylesheet"/>
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --sidebar-bg: #1a1f2e;
+            --text-light: #ffffff;
+            --text-muted: #a0aec0;
+            --hover-bg: rgba(102, 126, 234, 0.1);
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f7fa;
+        }
+
+        .layui-side {
+            background: var(--sidebar-bg) !important;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+        }
+
+        .layui-nav-tree {
+            background: transparent !important;
+        }
+
+        .layui-nav-tree .layui-nav-item a {
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .layui-nav-tree .layui-nav-item a:hover {
+            color: var(--text-light);
+            background: var(--hover-bg);
+            border-left-color: var(--primary-color);
+        }
+
+        .layui-nav-tree .layui-nav-itemed > a,
+        .layui-nav-tree .layui-this > a {
+            color: var(--text-light) !important;
+            background: linear-gradient(90deg, var(--hover-bg) 0%, transparent 100%) !important;
+            border-left-color: var(--primary-color);
+        }
+
+        .layui-nav-tree .layui-nav-child {
+            background: rgba(0,0,0,0.15) !important;
+        }
+
+        .layui-nav-tree .layui-nav-child dd.layui-this,
+        .layui-nav-tree .layui-nav-child dd.layui-this a {
+            background: var(--primary-color) !important;
+            color: white !important;
+        }
+
+        .layui-body {
+            background: #f5f7fa;
+            padding: 20px;
+            bottom: 0;
+        }
+
+        /* 页面标题 */
+        .page-header {
+            background: white;
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* 内容卡片 */
+        .content-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .security-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .security-icon i {
+            font-size: 40px;
+            color: white;
+        }
+
+        .card-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .card-desc {
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        /* 表单样式 */
+        .layui-form-item {
+            margin-bottom: 25px;
+        }
+
+        .layui-form-label {
+            width: 100px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .layui-input-block {
+            margin-left: 130px;
+        }
+
+        .layui-input {
+            height: 48px;
+            line-height: 48px;
+            border: 2px solid #e8e8e8;
+            border-radius: 10px;
+            padding-left: 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .layui-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 18px;
+        }
+
+        .layui-input-wrapper {
+            position: relative;
+        }
+
+        .layui-input-wrapper .layui-input {
+            padding-left: 45px;
+        }
+
+        /* 密码强度指示器 */
+        .password-strength {
+            margin-top: 8px;
+            height: 4px;
+            background: #e8e8e8;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .password-strength-bar.weak {
+            width: 33%;
+            background: #ff6b6b;
+        }
+
+        .password-strength-bar.medium {
+            width: 66%;
+            background: #feca57;
+        }
+
+        .password-strength-bar.strong {
+            width: 100%;
+            background: #1dd1a1;
+        }
+
+        .password-strength-text {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #888;
+        }
+
+        /* 提交按钮 */
+        .submit-btn {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 安全提示 */
+        .security-tips {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .security-tips h4 {
+            color: var(--primary-color);
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .security-tips ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .security-tips li {
+            color: #666;
+            font-size: 13px;
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .security-tips li::before {
+            content: '•';
+            color: var(--primary-color);
+            position: absolute;
+            left: 5px;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+
+    <div th:include="common/user_header :: header"></div>
+
+    <div class="layui-side">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <i class="layui-icon layui-icon-form" style="margin-right: 8px;"></i>借阅管理
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/userBorrowBookRecord">
+                            <i class="layui-icon layui-icon-list" style="margin-right: 5px;"></i>借书记录
+                        </a></dd>
+                        <dd><a href="/borrowingPage">
+                            <i class="layui-icon layui-icon-survey" style="margin-right: 5px;"></i>借阅书籍
+                        </a></dd>
+                    </dl>
+                </li>
+
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <i class="layui-icon layui-icon-read" style="margin-right: 8px;"></i>书籍管理
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/userReturnBooksPage">
+                            <i class="layui-icon layui-icon-return" style="margin-right: 5px;"></i>归还书籍
+                        </a></dd>
+                        <dd><a href="/findBookPage">
+                            <i class="layui-icon layui-icon-search" style="margin-right: 5px;"></i>查询书籍
+                        </a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="/userMessagePage">
+                        <i class="layui-icon layui-icon-username" style="margin-right: 8px;"></i>个人信息
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 页面标题 -->
+        <div class="page-header">
+            <div class="page-title">
+                <i class="layui-icon layui-icon-password" style="color: var(--primary-color); margin-right: 10px;"></i>
+                安全设置
+            </div>
+            <div class="page-subtitle">修改您的登录密码，保障账户安全</div>
+        </div>
+
+        <!-- 密码修改卡片 -->
+        <div class="content-card">
+            <div class="security-icon">
+                <i class="layui-icon layui-icon-password"></i>
+            </div>
+            <div class="card-title">修改密码</div>
+            <div class="card-desc">为了您的账户安全，请定期更换密码</div>
+
+            <form id="passwordForm" class="layui-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">当前密码</label>
+                    <div class="layui-input-block">
+                        <div class="layui-input-wrapper">
+                            <i class="layui-icon layui-icon-password input-icon"></i>
+                            <input type="password" name="oldPassword" id="oldPassword" required
+                                   placeholder="请输入当前密码" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">新密码</label>
+                    <div class="layui-input-block">
+                        <div class="layui-input-wrapper">
+                            <i class="layui-icon layui-icon-key input-icon"></i>
+                            <input type="password" name="newPassword" id="newPassword" required
+                                   placeholder="请输入新密码" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="strengthBar"></div>
+                        </div>
+                        <div class="password-strength-text" id="strengthText">密码强度：请输入密码</div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">确认密码</label>
+                    <div class="layui-input-block">
+                        <div class="layui-input-wrapper">
+                            <i class="layui-icon layui-icon-ok-circle input-icon"></i>
+                            <input type="password" name="confirmPassword" id="confirmPassword" required
+                                   placeholder="请再次输入新密码" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="margin-top: 30px;">
+                    <div class="layui-input-block" style="margin-left: 0;">
+                        <button type="button" id="submitBtn" class="submit-btn">
+                            <i class="layui-icon layui-icon-ok" style="margin-right: 8px;"></i>确认修改
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- 安全提示 -->
+            <div class="security-tips">
+                <h4>
+                    <i class="layui-icon layui-icon-tips"></i>
+                    安全提示
+                </h4>
+                <ul>
+                    <li>密码长度建议为6-20位</li>
+                    <li>建议包含字母、数字和特殊字符</li>
+                    <li>请勿使用与其他网站相同的密码</li>
+                    <li>定期更换密码可提高账户安全性</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div th:include="common/footer :: footer"></div>
+
+</div>
+
+<script src="/scripts/jquery.min.js"></script>
+<script src="/layui/layui.js"></script>
+<script src="/scripts/user/userSecurity.js"></script>
+<script>
+    // 初始化layui导航
+    layui.use(['element'], function(){
+        var element = layui.element;
+    });
+</script>
+
+</body>
+</html>

@@ -63,7 +63,15 @@
                 <h1 style="text-align: left">查询结果</h1>
                 <hr class="layui-bg-blue">
 
-                <table class="layui-table ">
+                <div th:if="${noResult != null and noResult}" style="text-align: center; padding: 50px; color: #999;">
+                    <i class="layui-icon" style="font-size: 50px;">&#xe69c;</i>
+                    <p style="font-size: 16px; margin-top: 10px;">
+                        未找到与 "<span th:text="${searchInfo}" style="color: #1E9FFF;"></span>" 相关的书籍
+                    </p>
+                    <p style="color: #ccc;">请尝试其他关键词搜索</p>
+                </div>
+
+                <table class="layui-table " th:if="${noResult == null or !noResult}">
                     <thead>
                     <tr>
                         <th>书籍编号</th>

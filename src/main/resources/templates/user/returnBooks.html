@@ -43,11 +43,53 @@
             <hr class="layui-bg-blue">
         </div>
 
-        <div>
-            <input class=" layui-input-block" placeholder="请输入书籍编号" autocomplete="off" autofocus
-                   id="bookId" type="text" name="bookId">
+        <div class="layui-row">
+            <div class="layui-col-md6">
+                <div class="layui-card">
+                    <div class="layui-card-header">已借阅书籍</div>
+                    <div class="layui-card-body">
+                        <table class="layui-table" lay-size="sm">
+                            <thead>
+                            <tr>
+                                <th>书籍编号</th>
+                                <th>书名</th>
+                                <th>借阅日期</th>
+                                <th>应还日期</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="borrow:${borrowingBooksList}">
+                                <td th:text="${borrow.getBook().getBookId()}"></td>
+                                <td th:text="${borrow.getBook().getBookName()}"></td>
+                                <td th:text="${borrow.getDateOfBorrowing()}"></td>
+                                <td th:text="${borrow.getDateOfReturn()}"></td>
+                            </tr>
+                            <tr th:if="${borrowingBooksList == null or borrowingBooksList.size() == 0}">
+                                <td colspan="4" style="text-align: center; color: #999;">暂无借阅记录</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-            <button class="layui-btn layui-bg-blue" id="btn1">确认还书</button>
+            <div class="layui-col-md6">
+                <div class="layui-card">
+                    <div class="layui-card-header">还书操作</div>
+                    <div class="layui-card-body">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">书籍编号</label>
+                            <div class="layui-input-block">
+                                <input placeholder="请输入书籍编号" autocomplete="off" autofocus
+                                       id="bookId" type="text" name="bookId" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <button class="layui-btn layui-bg-blue" id="btn1">确认还书</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>

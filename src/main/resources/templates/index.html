@@ -18,7 +18,7 @@
 
         #login_form {
             width: 400px;
-            height: 400px;
+            height: 480px;
             margin: 80px auto;
             padding: 30px;
             background-color: #f2f2f2;
@@ -59,6 +59,15 @@
 
 
             <div class="layui-form-item">
+                <label class="layui-form-label">验证码:</label>
+                <div class="layui-input-block">
+                    <input type="text" name="captcha" id="captcha"
+                           placeholder="请输入验证码" autocomplete="off" class="layui-input" style="width: 120px; display: inline-block;">
+                    <img id="captchaImg" src="/captcha" style="height: 38px; cursor: pointer; vertical-align: middle; margin-left: 10px;" title="点击刷新验证码">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
                 <label class="layui-form-label">用户身份</label>
                 <div class="layui-input-block">
                     <input class="form-check-input" type="radio" name="role" value="1" title="学生" checked>
@@ -88,12 +97,21 @@
 
         $(function () {
             let flag = [[${session.flag}]];
-            if (flag) {
+            if (flag == 1) {
                 layer.msg("用户名或密码错误", {
                     icon: 2,
-                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    time: 2000
+                });
+            } else if (flag == 2) {
+                layer.msg("验证码错误", {
+                    icon: 2,
+                    time: 2000
                 });
             }
+            
+            $("#captchaImg").click(function () {
+                $(this).attr("src", "/captcha?t=" + new Date().getTime());
+            });
         });
     });
 
@@ -102,21 +120,24 @@
         let username = $("#username").val();
         let user_judge = check(username);
 
-        // 首先判断用户名是否为空 
         if (user_judge) {
             let password = $("#password").val();
             let pwd_judge = check(password);
 
-            // 用户名不为空  , 判断密码是否为空
             if (pwd_judge) {
+                let captcha = $("#captcha").val();
+                let captcha_judge = check(captcha);
+                
+                if (!captcha_judge) {
+                    layer.alert("验证码不能为空", {icon: 5});
+                    return false;
+                }
+
                 let role_id = $('input[name="role"]:checked').val();
 
-                // 如果role_id ==1 ,则是普通用户 , 直接提交表单
                 if (role_id == 1) {
                     $("#my_form").submit();
                 } else {
-
-                    //如果是管理员 , 则将action 进行更改 
                     $("#my_form").attr("action", "/adminLogin")
                     $("#my_form").submit();
                 }
@@ -132,7 +153,6 @@
         }
     });
 
-    // 校验表单中用户名 与 密码是否输入,  如果有值 -> 返回 true , 如果未输入 返回 false;
     function check(val) {
         val = val.toString().trim();
         return !(val == '');

@@ -68,6 +68,14 @@ public class BookController {
         List<BookVo> bookVos = bookService.selectBooksByBookPartInfo(bookPartInfo);
 
         model.addAttribute("bookList", bookVos);
+        
+        if (bookVos == null || bookVos.isEmpty()) {
+            model.addAttribute("noResult", true);
+            model.addAttribute("searchInfo", bookPartInfo);
+        } else {
+            model.addAttribute("noResult", false);
+        }
+        
         return "user/findBook";
     }
 

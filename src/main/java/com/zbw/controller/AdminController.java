@@ -54,18 +54,24 @@ public class AdminController {
      * @return
      */
     @PostMapping("/adminLogin")
-    public String adminLogin(@Param("userName") String userName, @Param("password") String password, HttpServletRequest request) {
+    public String adminLogin(@Param("userName") String userName, @Param("password") String password, @Param("captcha") String captcha, HttpServletRequest request) {
+        String sessionCaptcha = (String) request.getSession().getAttribute("captchaCode");
+        
+        if (sessionCaptcha == null || !sessionCaptcha.equalsIgnoreCase(captcha)) {
+            request.getSession().setAttribute("flag", 2);
+            return "index";
+        }
+        
         Admin admin = adminService.adminLogin(userName, password);
 
         if (admin == null) {
-            // flag 为 1 表示 登录失败 
             request.getSession().setAttribute("flag", 1);
             return "index";
         }
 
-        // flag = 0 表示用户名密码校验成功
         request.getSession().setAttribute("flag", 0);
         request.getSession().setAttribute("admin", admin);
+        request.getSession().removeAttribute("captchaCode");
         return "admin/index";
     }
 

@@ -40,18 +40,24 @@ public class UserController {
      */
     @PostMapping("/userLogin")
     public String userLogin(@Param("userName") String userName,
-                            @Param("password") String password, HttpServletRequest request) {
+                            @Param("password") String password,
+                            @Param("captcha") String captcha, HttpServletRequest request) {
+        String sessionCaptcha = (String) request.getSession().getAttribute("captchaCode");
+        
+        if (sessionCaptcha == null || !sessionCaptcha.equalsIgnoreCase(captcha)) {
+            request.getSession().setAttribute("flag", 2);
+            return "index";
+        }
+        
         User user = userService.userLogin(userName, password);
         
         if (null != user) {
-            // flag = 0 表示用户名密码校验成功  【用于前端校验】
             request.getSession().setAttribute("flag", 0);
-
             request.getSession().setAttribute("user", user);
+            request.getSession().removeAttribute("captchaCode");
             return "user/index";
         }
 
-        // flag 为 1 表示 登录失败 【用于前端校验】
         request.getSession().setAttribute("flag", 1);
         return "index";
     }
@@ -105,7 +111,9 @@ public class UserController {
      * 返回还书页面
      */
     @RequestMapping("/userReturnBooksPage")
-    public String userReturnBooksPage() {
+    public String userReturnBooksPage(Model model, HttpServletRequest request) {
+        ArrayList<BorrowingBooksVo> borrowingBooksList = borrowingBooksRecordService.selectAllBorrowRecord(request);
+        model.addAttribute("borrowingBooksList", borrowingBooksList);
         return "user/returnBooks";
     }
 

@@ -73,14 +73,21 @@
                         <th>状态</th>
                     </tr>
                     </thead>
-
-                    <tr th:each="book:${bookList}">
+                    <tbody>
+                    <tr th:if="${bookList == null || bookList.size() == 0}">
+                        <td colspan="5" style="text-align: center; color: #999; padding: 20px;">
+                            <i class="layui-icon layui-icon-face-cry" style="font-size: 30px; color: #999; display: block; margin-bottom: 10px;"></i>
+                            未找到相关书籍，请检查输入信息是否正确
+                        </td>
+                    </tr>
+                    <tr th:each="book:${bookList}" th:if="${bookList != null && bookList.size() > 0}">
                         <td><label th:text="${book.getBookId()}"></label></td>
                         <td><label th:text="${book.getBookName()}"></label></td>
                         <td><label th:text="${book.getBookAuthor()}"></label></td>
                         <td><label th:text="${book.getBookPublish()}"></label></td>
                         <td><label th:text="${book.getIsExist()}"></label></td>
                     </tr>
+                    </tbody>
                 </table>
             </div>
         </div>

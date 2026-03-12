@@ -43,11 +43,53 @@
             <hr class="layui-bg-blue">
         </div>
 
-        <div>
-            <input class=" layui-input-block" placeholder="请输入书籍编号" autocomplete="off" autofocus
-                   id="bookId" type="text" name="bookId">
+        <div class="layui-row">
+            <div class="layui-col-md5">
+                <div style="margin-bottom: 15px;">
+                    <input class="layui-input" placeholder="请输入书籍编号" autocomplete="off" autofocus
+                           id="bookId" type="text" name="bookId" style="width: 200px; display: inline-block;">
+                    <button class="layui-btn layui-bg-blue" id="btn1">确认还书</button>
+                </div>
+            </div>
+        </div>
 
-            <button class="layui-btn layui-bg-blue" id="btn1">确认还书</button>
+        <!-- 已借阅书籍列表 -->
+        <div class="layui-row" style="margin-top: 20px;">
+            <div class="layui-col-md10">
+                <hr class="layui-bg-blue">
+                <h4 style="text-align: left; margin-bottom: 10px;">我的借阅列表</h4>
+                <hr class="layui-bg-blue">
+
+                <table class="layui-table" lay-size="sm">
+                    <thead>
+                    <tr>
+                        <th>书籍编号</th>
+                        <th>书名</th>
+                        <th>作者</th>
+                        <th>借阅日期</th>
+                        <th>应还日期</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${borrowingBooksList == null || borrowingBooksList.size() == 0}">
+                        <td colspan="6" style="text-align: center; color: #999;">暂无借阅记录</td>
+                    </tr>
+                    <tr th:each="record : ${borrowingBooksList}">
+                        <td th:text="${record.book.bookId}"></td>
+                        <td th:text="${record.book.bookName}"></td>
+                        <td th:text="${record.book.bookAuthor}"></td>
+                        <td th:text="${record.dateOfBorrowing}"></td>
+                        <td th:text="${record.dateOfReturn}"></td>
+                        <td>
+                            <button class="layui-btn layui-btn-xs layui-btn-normal return-book-btn"
+                                    th:data-bookid="${record.book.bookId}"
+                                    th:data-bookname="${record.book.bookName}">归还</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
     </div>

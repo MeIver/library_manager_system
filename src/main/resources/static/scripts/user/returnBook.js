@@ -5,6 +5,7 @@ layui.use(['form', 'element','layer'], function () {
 });
 
 $(document).ready(function () {
+    // 确认还书按钮点击事件
     $("#btn1").click(function () {
         let bookId = $("#bookId").val().toString().trim();
 
@@ -14,7 +15,19 @@ $(document).ready(function () {
         }
 
         returnBook(bookId);
+    });
 
+    // 借阅列表中的归还按钮点击事件
+    $(".return-book-btn").click(function () {
+        let bookId = $(this).data("bookid");
+        let bookName = $(this).data("bookname");
+
+        layer.confirm('确定要归还《' + bookName + '》吗？', {
+            btn: ['确定', '取消']
+        }, function(index){
+            returnBook(bookId);
+            layer.close(index);
+        });
     });
 });
 
@@ -28,7 +41,10 @@ function returnBook(bookId) {
         success: function (data) {
 
             if (data.toString() == "true") {
-                layer.msg('还书成功!!', {icon: 6, time: 2000});
+                layer.msg('还书成功!!', {icon: 6, time: 2000}, function(){
+                    // 刷新页面以更新借阅列表
+                    window.location.reload();
+                });
                 $("#bookId").val('');
             } else {
                 layer.msg('还书失败!', {icon: 7, time: 2000});

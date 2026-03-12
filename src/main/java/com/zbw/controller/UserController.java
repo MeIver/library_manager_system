@@ -7,6 +7,7 @@ import com.zbw.domain.Vo.BorrowingBooksVo;
 import com.zbw.service.IBookService;
 import com.zbw.service.IBorrowingBooksRecordService;
 import com.zbw.service.IUserService;
+import com.zbw.utils.CaptchaUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,7 +41,16 @@ public class UserController {
      */
     @PostMapping("/userLogin")
     public String userLogin(@Param("userName") String userName,
-                            @Param("password") String password, HttpServletRequest request) {
+                            @Param("password") String password,
+                            @Param("captcha") String captcha,
+                            HttpServletRequest request) {
+        // 首先验证验证码
+        if (!CaptchaUtil.verifyCaptcha(request, captcha)) {
+            // flag 为 2 表示验证码错误
+            request.getSession().setAttribute("flag", 2);
+            return "index";
+        }
+
         User user = userService.userLogin(userName, password);
         
         if (null != user) {
@@ -105,7 +115,10 @@ public class UserController {
      * 返回还书页面
      */
     @RequestMapping("/userReturnBooksPage")
-    public String userReturnBooksPage() {
+    public String userReturnBooksPage(Model model, HttpServletRequest request) {
+        // 获取当前用户的借阅记录
+        ArrayList<BorrowingBooksVo> borrowingBooksList = borrowingBooksRecordService.selectAllBorrowRecord(request);
+        model.addAttribute("borrowingBooksList", borrowingBooksList);
         return "user/returnBooks";
     }
 

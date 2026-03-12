@@ -7,6 +7,7 @@ import com.zbw.domain.Vo.BookVo;
 import com.zbw.service.IAdminService;
 import com.zbw.service.IBookCategoryService;
 import com.zbw.service.IUserService;
+import com.zbw.utils.CaptchaUtil;
 import com.zbw.utils.page.Page;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
@@ -54,7 +55,17 @@ public class AdminController {
      * @return
      */
     @PostMapping("/adminLogin")
-    public String adminLogin(@Param("userName") String userName, @Param("password") String password, HttpServletRequest request) {
+    public String adminLogin(@Param("userName") String userName, 
+                             @Param("password") String password,
+                             @Param("captcha") String captcha,
+                             HttpServletRequest request) {
+        // 首先验证验证码
+        if (!CaptchaUtil.verifyCaptcha(request, captcha)) {
+            // flag 为 2 表示验证码错误
+            request.getSession().setAttribute("flag", 2);
+            return "index";
+        }
+
         Admin admin = adminService.adminLogin(userName, password);
 
         if (admin == null) {

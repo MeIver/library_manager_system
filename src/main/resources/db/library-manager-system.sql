@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin` (
   `admin_id` int(11) NOT NULL AUTO_INCREMENT,
   `admin_name` varchar(20) DEFAULT NULL,
-  `admin_pwd` varchar(20) DEFAULT NULL,
+  `admin_pwd` varchar(32) DEFAULT NULL,
   `admin_email` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`admin_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -30,7 +30,7 @@ CREATE TABLE `admin` (
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES ('1', 'admin', '123456', '501455447@qq.com');
+INSERT INTO `admin` VALUES ('1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '501455447@qq.com');
 
 -- ----------------------------
 -- Table structure for book
@@ -148,7 +148,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_name` varchar(20) DEFAULT NULL,
-  `user_pwd` varchar(20) DEFAULT NULL,
+  `user_pwd` varchar(32) DEFAULT NULL,
   `user_email` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
@@ -156,15 +156,15 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'user1', '123456', '501455447@qq.com');
-INSERT INTO `user` VALUES ('2', 'zbw', '123456', '501455447@qq.com');
-INSERT INTO `user` VALUES ('5', 'user2', '123456', '501455447@qq.com');
-INSERT INTO `user` VALUES ('6', 'LeBronJames', '123456', '501455447@qq.com');
-INSERT INTO `user` VALUES ('7', '科比', '123456', '501455447@qq.com');
-INSERT INTO `user` VALUES ('8', '柏拉图', '123456', '501455447@qq.com');
-INSERT INTO `user` VALUES ('9', '拿破仑', '123456', '501455447@qq.com');
-INSERT INTO `user` VALUES ('10', '欧文', '123456', '501455447@qq.com');
-INSERT INTO `user` VALUES ('11', '库兹马', '123456', '501455447@qq.com');
-INSERT INTO `user` VALUES ('13', '魔术师', '123456', '501455447@qq.com');
-INSERT INTO `user` VALUES ('16', '周杰伦', '123456', '501455447@qq.com');
-INSERT INTO `user` VALUES ('23', 'Variation', '123456', '501455447@qq.com');
+INSERT INTO `user` VALUES ('1', 'user1', 'e10adc3949ba59abbe56e057f20f883e', '501455447@qq.com');
+INSERT INTO `user` VALUES ('2', 'zbw', 'e10adc3949ba59abbe56e057f20f883e', '501455447@qq.com');
+INSERT INTO `user` VALUES ('5', 'user2', 'e10adc3949ba59abbe56e057f20f883e', '501455447@qq.com');
+INSERT INTO `user` VALUES ('6', 'LeBronJames', 'e10adc3949ba59abbe56e057f20f883e', '501455447@qq.com');
+INSERT INTO `user` VALUES ('7', '科比', 'e10adc3949ba59abbe56e057f20f883e', '501455447@qq.com');
+INSERT INTO `user` VALUES ('8', '柏拉图', 'e10adc3949ba59abbe56e057f20f883e', '501455447@qq.com');
+INSERT INTO `user` VALUES ('9', '拿破仑', 'e10adc3949ba59abbe56e057f20f883e', '501455447@qq.com');
+INSERT INTO `user` VALUES ('10', '欧文', 'e10adc3949ba59abbe56e057f20f883e', '501455447@qq.com');
+INSERT INTO `user` VALUES ('11', '库兹马', 'e10adc3949ba59abbe56e057f20f883e', '501455447@qq.com');
+INSERT INTO `user` VALUES ('13', '魔术师', 'e10adc3949ba59abbe56e057f20f883e', '501455447@qq.com');
+INSERT INTO `user` VALUES ('16', '周杰伦', 'e10adc3949ba59abbe56e057f20f883e', '501455447@qq.com');
+INSERT INTO `user` VALUES ('23', 'Variation', 'e10adc3949ba59abbe56e057f20f883e', '501455447@qq.com');

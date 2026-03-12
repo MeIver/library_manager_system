@@ -2,112 +2,172 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管理员-图书管理系统</title>
     <link href="/layui/css/layui.css" rel="stylesheet"/>
-
+    <link href="/css/modern-style.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        .layui-layout-admin .layui-body {
+            background-color: #f8fafc;
+            padding: 2rem;
+        }
+        .profile-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            margin: 0 auto 1rem;
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            width: 120px;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        .info-value {
+            flex: 1;
+            color: var(--dark-color);
+        }
+        .password-mask {
+            letter-spacing: 2px;
+        }
+        .action-buttons {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .layui-side {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
+        }
+    </style>
 </head>
-
+<body>
 <div class="layui-layout layui-layout-admin">
 
     <div th:include="common/admin_header :: header"></div>
 
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
-            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree">
 
-                <li class="layui-nav-item ">
-                    <a class="" href="javascript:;">书籍管理</a>
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;"><i class="fa fa-book" style="margin-right: 8px;"></i>书籍管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/addBookPage">&emsp;&emsp;录入新书</a></dd>
-                        <dd><a href="/addCategoryPage?pageNum=1">&emsp;&emsp;新建类别</a></dd>
-                        <dd><a href="/showBooksPage">&emsp;&emsp;查询书籍</a></dd>
+                        <dd><a href="/addBookPage"><i class="fa fa-plus" style="margin-right: 8px;"></i>录入新书</a></dd>
+                        <dd><a href="/addCategoryPage?pageNum=1"><i class="fa fa-folder" style="margin-right: 8px;"></i>新建类别</a></dd>
+                        <dd><a href="/showBooksPage"><i class="fa fa-search" style="margin-right: 8px;"></i>查询书籍</a></dd>
                     </dl>
                 </li>
 
                 <li class="layui-nav-item">
-                    <a class="" href="javascript:;">用户管理</a>
+                    <a class="" href="javascript:;"><i class="fa fa-users" style="margin-right: 8px;"></i>用户管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/showUsersPage?pageNum=1">&emsp;&emsp;查询用户</a></dd>
-                        <dd><a href="/addUserPage">&emsp;&emsp;新增用户</a></dd>
+                        <dd><a href="/showUsersPage?pageNum=1"><i class="fa fa-list" style="margin-right: 8px;"></i>查询用户</a></dd>
+                        <dd><a href="/addUserPage"><i class="fa fa-user-plus" style="margin-right: 8px;"></i>新增用户</a></dd>
                     </dl>
                 </li>
 
-                <li class="layui-nav-item ">
-                    <a class="" href="javascript:;">借阅信息</a>
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;"><i class="fa fa-history" style="margin-right: 8px;"></i>借阅信息</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/allBorrowBooksRecordPage?pageNum=1">&emsp;&emsp;所有记录</a></dd>
+                        <dd><a href="/allBorrowBooksRecordPage?pageNum=1"><i class="fa fa-list-alt" style="margin-right: 8px;"></i>所有记录</a></dd>
                     </dl>
                 </li>
 
-                <li class="layui-nav-item  layui-nav-itemed"><a class="" href="/adminInfoPage">个人信息</a></li>
+                <li class="layui-nav-item layui-nav-itemed"><a href="/adminInfoPage"><i class="fa fa-user-circle" style="margin-right: 8px;"></i>个人信息</a></li>
             </ul>
         </div>
     </div>
 
     <div class="layui-body layui-container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <i class="fa fa-user"></i>
+                </div>
+                <h2 style="color: var(--dark-color); margin-bottom: 0.5rem;" th:text="${session.admin.getAdminName()}"></h2>
+                <p style="color: var(--secondary-color);">系统管理员</p>
+            </div>
 
-        <hr class="layui-bg-blue">
-        <h3 style="font-size: xx-large; text-align: center"> 管 理 员 信 息 </h3>
-        <hr class="layui-bg-blue">
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fa fa-id-card" style="margin-right: 8px;"></i>管理员ID
+                </div>
+                <div class="info-value" th:text="${session.admin.getAdminId()}"></div>
+            </div>
 
-        <div class="layui-row">
-            <div class="layui-col-md8 layui-col-lg-offset2">
-                <table class="layui-table">
-                    <thead>
-                    <tr>
-                        <th>管理员id</th>
-                        <th>管理员姓名</th>
-                        <th>管理员邮箱</th>
-                        <th>管理员密码</th>
-                    </tr>
-                    </thead>
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fa fa-user" style="margin-right: 8px;"></i>姓名
+                </div>
+                <div class="info-value" th:text="${session.admin.getAdminName()}"></div>
+            </div>
 
-                    <tr>
-                        <td><b th:text="${session.admin.getAdminId()}"></b></td>
-                        <td><b th:text="${session.admin.getAdminName()}"></b></td>
-                        <td><b th:text="${session.admin.getAdminEmail()}"></b></td>
-                        <td><b th:text="${session.admin.getAdminPwd()}"></b></td>
-                    </tr>
-                </table>
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fa fa-envelope" style="margin-right: 8px;"></i>邮箱
+                </div>
+                <div class="info-value" th:text="${session.admin.getAdminEmail()}"></div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">
+                    <i class="fa fa-lock" style="margin-right: 8px;"></i>密码
+                </div>
+                <div class="info-value password-mask">********</div>
+            </div>
+
+            <div class="action-buttons">
+                <a href="/adminSecurityPage" class="layui-btn layui-btn-primary">
+                    <i class="fa fa-lock"></i> 修改密码
+                </a>
+                <button id="modify-admin" class="layui-btn modern-btn" style="background-color: var(--primary-color);">
+                    <i class="fa fa-edit"></i> 修改基本信息
+                </button>
             </div>
         </div>
 
-        <div class="layui-row">
-            <button id="modify-admin" class="layui-btn" style="display: block; margin: 10px auto;">修改信息</button>
-        </div>
-
-        <div id="window" title="修改信息" style="margin: 5%; display: none">
+        <div id="window" title="修改基本信息" style="display: none; padding: 20px;">
             <form id="updateAdminForm" class="layui-form">
-
-
                 <div class="layui-form-item">
                     <label class="layui-form-label">名字</label>
-
                     <div class="layui-input-block">
                         <input type="text" name="adminName" th:value="${session.admin.getAdminName()}" id="name"
-                               class="layui-input">
+                               class="layui-input modern-input">
                     </div>
                 </div>
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">邮箱</label>
-
                     <div class="layui-input-block">
-                        <input type="text" name="adminEmail" th:value="${session.admin.getAdminEmail()}" id="email"
-                               class="layui-input">
+                        <input type="email" name="adminEmail" th:value="${session.admin.getAdminEmail()}" id="email"
+                               class="layui-input modern-input">
                     </div>
                 </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">密码</label>
-
-                    <div class="layui-input-block">
-                        <input type="text" name="adminPwd" id="password" class="layui-input"
-                               th:value="${session.admin.getAdminPwd()}">
-                    </div>
-                </div>
-
             </form>
         </div>
     </div>
@@ -120,6 +180,58 @@
 <script src="/layui/layui.js"></script>
 <script src="/scripts/admin/adminInfo.js"></script>
 
+<script>
+    layui.use(['layer', 'form', 'element'], function() {
+        let layer = layui.layer;
+        let form = layui.form;
+        let element = layui.element;
+
+        $('#modify-admin').click(function() {
+            layer.open({
+                type: 1,
+                title: '修改基本信息',
+                content: $('#window'),
+                area: ['500px', '300px'],
+                shadeClose: true,
+                shade: 0.3,
+                btn: ['保存', '取消'],
+                yes: function(index, layero) {
+                    let name = $('#name').val().trim();
+                    let email = $('#email').val().trim();
+                    
+                    if (name === '') {
+                        layer.tips('姓名不能为空', '#name', {tips: 1});
+                        return false;
+                    }
+                    if (email === '') {
+                        layer.tips('邮箱不能为空', '#email', {tips: 1});
+                        return false;
+                    }
+                    
+                    $.ajax({
+                        url: '/updateAdmin',
+                        type: 'post',
+                        data: $('#updateAdminForm').serialize(),
+                        success: function(result) {
+                            if (result === 'success') {
+                                layer.msg('修改成功', {icon: 1});
+                                layer.close(index);
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1000);
+                            } else {
+                                layer.msg('修改失败', {icon: 2});
+                            }
+                        },
+                        error: function() {
+                            layer.msg('修改失败', {icon: 2});
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
 
 </body>
 </html>

@@ -2,21 +2,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <footer th:fragment="header">
-        <div class="layui-header">
-            <div class=" layui-nav " style="font-size: x-large; color: #009688;line-height: 60px;"> 图 书 管 理 系 统</div>
-            <!-- 头部区域（可配合layui已有的水平导航） -->
+        <div class="layui-header modern-header">
+            <div class="layui-logo" style="color: white; font-size: 20px; font-weight: 600;">
+                <i class="fa fa-book" style="margin-right: 8px;"></i>图书管理系统
+            </div>
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
                     <a href="javascript:;">
-                        <img src="/images/user_image.jpg" class="layui-nav-img">
+                        <img src="/images/user_image.jpg" class="layui-nav-img" style="border: 2px solid rgba(255,255,255,0.3);">
                         <span th:text="${session.admin.getAdminName()}"></span>
                     </a>
                     <dl class="layui-nav-child">
-                        <dd><a href="">基本资料</a></dd>
-                        <dd><a href="">安全设置</a></dd>
+                        <dd><a href="/adminInfoPage"><i class="fa fa-user-circle-o" style="margin-right: 8px;"></i>基本资料</a></dd>
+                        <dd><a href="/adminSecurityPage"><i class="fa fa-lock" style="margin-right: 8px;"></i>安全设置</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a href="/adminLogOut">退出登录</a></li>
+                <li class="layui-nav-item">
+                    <a href="/adminLogOut" style="color: rgba(255,255,255,0.9);">
+                        <i class="fa fa-sign-out" style="margin-right: 5px;"></i>退出登录
+                    </a>
+                </li>
             </ul>
         </div>
     </footer>

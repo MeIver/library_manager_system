@@ -151,6 +151,11 @@ public class AdminController {
     public String adminInfo() {
         return "admin/adminInfo";
     }
+
+    @RequestMapping("/adminSecurityPage")
+    public String adminSecurityPage() {
+        return "admin/adminSecurity";
+    }
     
     /**
      * 更新管理员信息

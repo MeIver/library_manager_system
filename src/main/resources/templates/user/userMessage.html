@@ -2,114 +2,327 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>普通用户-图书管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人信息 - 图书管理系统</title>
     <link href="/layui/css/layui.css" rel="stylesheet"/>
+    <link href="/css/modern-style.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
+        .profile-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid rgba(255,255,255,0.3);
+            margin-bottom: 1rem;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-role {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .profile-content {
+            padding: 2rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            font-size: 0.875rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .edit-btn {
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .edit-btn:hover {
+            color: var(--primary-dark);
+        }
+
+        .tab-container {
+            margin-bottom: 2rem;
+        }
+    </style>
 </head>
 <body class="layui-layout-body">
-
 <div class="layui-layout layui-layout-admin">
 
     <div th:include="common/user_header :: header"></div>
 
-    <div class="layui-side layui-bg-black">
+    <div class="layui-side layui-bg-black modern-sidebar">
         <div class="layui-side-scroll">
-            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree">
-
-                <li class="layui-nav-item ">
-                    <a class="" href="javascript:;">借阅管理</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="/userBorrowBookRecord">&emsp;&emsp;借书记录</a></dd>
-                        <dd><a href="/borrowingPage">&emsp;&emsp;借阅书籍</a></dd>
-                    </dl>
-                </li>
-
                 <li class="layui-nav-item">
-                    <a class="" href="javascript:;">书籍管理</a>
+                    <a href="javascript:;"><i class="fa fa-book" style="margin-right: 8px;"></i>借阅管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/userReturnBooksPage">&emsp;&emsp;归还书籍</a></dd>
-                        <dd><a href="/findBookPage">&emsp;&emsp;查询书籍</a></dd>
+                        <dd><a href="/userBorrowBookRecord"><i class="fa fa-history" style="margin-right: 8px;"></i>借书记录</a></dd>
+                        <dd><a href="/borrowingPage"><i class="fa fa-plus-circle" style="margin-right: 8px;"></i>借阅书籍</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item layui-nav-itemed"><a class="" href="/userMessagePage">个人信息</a></li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><i class="fa fa-cubes" style="margin-right: 8px;"></i>书籍管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/userReturnBooksPage"><i class="fa fa-refresh" style="margin-right: 8px;"></i>归还书籍</a></dd>
+                        <dd><a href="/findBookPage"><i class="fa fa-search" style="margin-right: 8px;"></i>查询书籍</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;"><i class="fa fa-user" style="margin-right: 8px;"></i>个人中心</a>
+                    <dl class="layui-nav-child">
+                        <dd class="layui-this"><a href="/userMessagePage"><i class="fa fa-user-circle-o" style="margin-right: 8px;"></i>基本资料</a></dd>
+                        <dd><a href="/userSecurityPage"><i class="fa fa-lock" style="margin-right: 8px;"></i>安全设置</a></dd>
+                    </dl>
+                </li>
             </ul>
         </div>
     </div>
 
-    <div class="layui-body layui-container">
-
-        <hr class="layui-bg-blue">
-        <h3 style="font-size: xx-large; text-align: center"> 个 人 信 息 </h3>
-        <hr class="layui-bg-blue">
-
-        <div class="layui-row">
-            <div class="layui-col-md8 layui-col-lg-offset2">
-                <table class="layui-table">
-                    <thead>
-                    <tr>
-                        <th>用户id</th>
-                        <th>用户姓名</th>
-                        <th>用户邮箱</th>
-                        <th>用户密码</th>
-                    </tr>
-                    </thead>
-
-                    <tr>
-                        <td><b th:text="${session.user.getUserId()}"></b></td>
-                        <td><b th:text="${session.user.getUserName()}"></b></td>
-                        <td><b th:text="${session.user.getUserEmail()}"></b></td>
-                        <td><b th:text="${session.user.getUserPwd()}"></b></td>
-                    </tr>
-                </table>
+    <div class="layui-body modern-body">
+        <div class="profile-container">
+            <div class="layui-tab tab-container">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">基本资料</li>
+                    <li><a href="/userSecurityPage" style="color: inherit; text-decoration: none;">安全设置</a></li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div class="profile-card">
+                            <div class="profile-header">
+                                <img src="/images/user_image.jpg" class="profile-avatar" alt="用户头像">
+                                <div class="profile-name" th:text="${session.user.getUserName()}"></div>
+                                <div class="profile-role">普通用户</div>
+                            </div>
+                            <div class="profile-content">
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fa fa-id-card"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <div class="info-label">用户ID</div>
+                                        <div class="info-value" th:text="${session.user.getUserId()}"></div>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fa fa-user"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <div class="info-label">用户名</div>
+                                        <div class="info-value" th:text="${session.user.getUserName()}"></div>
+                                    </div>
+                                    <div class="edit-btn" id="edit-name-btn">
+                                        <i class="fa fa-pencil"></i>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fa fa-envelope"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <div class="info-label">邮箱</div>
+                                        <div class="info-value" th:text="${session.user.getUserEmail()}"></div>
+                                    </div>
+                                    <div class="edit-btn" id="edit-email-btn">
+                                        <i class="fa fa-pencil"></i>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fa fa-lock"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <div class="info-label">密码</div>
+                                        <div class="info-value">********</div>
+                                    </div>
+                                    <div class="edit-btn">
+                                        <a href="/userSecurityPage" style="color: inherit;">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="layui-row">
-            <button id="modify-user" class="layui-btn" style="display: block; margin: 10px auto;">修改信息</button>
-        </div>
-
-        <div id="window" title="修改信息" style="margin: 5%; display: none">
-            <form id="updateUserForm" class="layui-form">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">名字</label>
-
-                    <div class="layui-input-block">
-                        <input type="text" name="userName" th:value="${session.user.getUserName()}" id="name"
-                               class="layui-input">
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">邮箱</label>
-
-                    <div class="layui-input-block">
-                        <input type="text" name="UserEmail" th:value="${session.user.getUserEmail()}" id="email"
-                               class="layui-input">
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">密码</label>
-
-                    <div class="layui-input-block">
-                        <input type="text" name="userPwd" id="password" class="layui-input"
-                               th:value="${session.user.getUserPwd()}">
-                    </div>
-                </div>
-
-            </form>
         </div>
     </div>
 
     <div th:include="common/footer :: footer"></div>
-
 </div>
 
+<div id="editNameWindow" style="display: none; padding: 20px;">
+    <form class="layui-form" id="updateUserNameForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="userName" th:value="${session.user.getUserName()}" id="edit-name-input"
+                       class="layui-input modern-input" lay-verify="required" lay-reqtext="用户名不能为空">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="editEmailWindow" style="display: none; padding: 20px;">
+    <form class="layui-form" id="updateUserEmailForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input type="email" name="userEmail" th:value="${session.user.getUserEmail()}" id="edit-email-input"
+                       class="layui-input modern-input" lay-verify="required|email" lay-reqtext="邮箱不能为空">
+            </div>
+        </div>
+    </form>
+</div>
 
 <script src="/scripts/jquery.min.js"></script>
 <script src="/layui/layui.js"></script>
-<script src="/scripts/user/userMessage.js"></script>
+<script>
+    layui.use(['form', 'layer', 'element'], function () {
+        let form = layui.form;
+        let layer = layui.layer;
+        let element = layui.element;
 
+        $('#edit-name-btn').on('click', function () {
+            layer.open({
+                type: 1,
+                title: '修改用户名',
+                area: ['450px', '200px'],
+                shadeClose: true,
+                content: $('#editNameWindow'),
+                btn: ['保存', '取消'],
+                yes: function(index) {
+                    updateUserName();
+                }
+            });
+        });
+
+        $('#edit-email-btn').on('click', function () {
+            layer.open({
+                type: 1,
+                title: '修改邮箱',
+                area: ['450px', '200px'],
+                shadeClose: true,
+                content: $('#editEmailWindow'),
+                btn: ['保存', '取消'],
+                yes: function(index) {
+                    updateUserEmail();
+                }
+            });
+        });
+
+        function updateUserName() {
+            let userName = $('#edit-name-input').val().trim();
+            if (userName === '') {
+                layer.msg('用户名不能为空', {icon: 2});
+                return;
+            }
+            $.ajax({
+                type: 'post',
+                url: '/updateUser',
+                data: { userName: userName },
+                success: function (data) {
+                    if(data) {
+                        layer.msg('用户名修改成功', {icon: 1, time: 2000}, function() {
+                            location.reload();
+                        });
+                    } else {
+                        layer.msg('修改失败', {icon: 2});
+                    }
+                },
+                error: function () {
+                    layer.msg('修改失败', {icon: 2});
+                }
+            });
+        }
+
+        function updateUserEmail() {
+            let userEmail = $('#edit-email-input').val().trim();
+            if (userEmail === '') {
+                layer.msg('邮箱不能为空', {icon: 2});
+                return;
+            }
+            $.ajax({
+                type: 'post',
+                url: '/updateUser',
+                data: { userEmail: userEmail },
+                success: function (data) {
+                    if(data) {
+                        layer.msg('邮箱修改成功', {icon: 1, time: 2000}, function() {
+                            location.reload();
+                        });
+                    } else {
+                        layer.msg('修改失败', {icon: 2});
+                    }
+                },
+                error: function () {
+                    layer.msg('修改失败', {icon: 2});
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>

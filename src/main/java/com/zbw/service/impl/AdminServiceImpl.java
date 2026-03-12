@@ -86,7 +86,7 @@ public class AdminServiceImpl implements IAdminService {
         //获取session对象中admin对象
         Admin sessionAdmin = (Admin) request.getSession().getAttribute("admin");
         admin.setAdminId(sessionAdmin.getAdminId());
-        int n = adminMapper.updateByPrimaryKey(admin);
+        int n = adminMapper.updateByPrimaryKeySelective(admin);
 
         if (n > 0) {
             //修改成功，更新session对象

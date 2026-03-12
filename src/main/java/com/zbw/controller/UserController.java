@@ -121,6 +121,14 @@ public class UserController {
     }
 
     /**
+     * 返回安全设置页面
+     */
+    @RequestMapping("/userSecurityPage")
+    public String userSecurityPage() {
+        return "user/userSecurity";
+    }
+
+    /**
      * 返回借书页面
      */
     @RequestMapping("/borrowingPage")

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安全设置 - 图书管理系统</title>
+    <link href="/layui/css/layui.css" rel="stylesheet"/>
+    <link href="/css/modern-style.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
+    <style>
+        .security-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .security-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+        }
+        .security-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .security-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+        .security-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        .security-desc {
+            color: var(--secondary-color);
+            margin-top: 0.5rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+            z-index: 10;
+        }
+        .modern-input {
+            padding-left: 45px !important;
+            height: 50px !important;
+            border-radius: var(--border-radius) !important;
+            border: 2px solid #e2e8f0 !important;
+            transition: var(--transition) !important;
+        }
+        .modern-input:focus {
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+        }
+        .btn-modern {
+            width: 100%;
+            height: 50px;
+            border-radius: var(--border-radius);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+        }
+        .tab-container {
+            margin-bottom: 2rem;
+        }
+        .password-strength {
+            margin-top: 0.5rem;
+            height: 4px;
+            border-radius: 2px;
+            background: #e2e8f0;
+            overflow: hidden;
+        }
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: var(--transition);
+        }
+        .strength-weak { background: #ef4444; width: 33%; }
+        .strength-medium { background: #f59e0b; width: 66%; }
+        .strength-strong { background: #10b981; width: 100%; }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+
+    <div th:include="common/user_header :: header"></div>
+
+    <div class="layui-side layui-bg-black modern-sidebar">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree">
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><i class="fa fa-book" style="margin-right: 8px;"></i>借阅管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/userBorrowBookRecord"><i class="fa fa-history" style="margin-right: 8px;"></i>借书记录</a></dd>
+                        <dd><a href="/borrowingPage"><i class="fa fa-plus-circle" style="margin-right: 8px;"></i>借阅书籍</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><i class="fa fa-cubes" style="margin-right: 8px;"></i>书籍管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/userReturnBooksPage"><i class="fa fa-refresh" style="margin-right: 8px;"></i>归还书籍</a></dd>
+                        <dd><a href="/findBookPage"><i class="fa fa-search" style="margin-right: 8px;"></i>查询书籍</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;"><i class="fa fa-user" style="margin-right: 8px;"></i>个人中心</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/userMessagePage"><i class="fa fa-user-circle-o" style="margin-right: 8px;"></i>基本资料</a></dd>
+                        <dd class="layui-this"><a href="/userSecurityPage"><i class="fa fa-lock" style="margin-right: 8px;"></i>安全设置</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body modern-body">
+        <div class="security-container">
+            <div class="layui-tab tab-container">
+                <ul class="layui-tab-title">
+                    <li><a href="/userMessagePage" style="color: inherit; text-decoration: none;">基本资料</a></li>
+                    <li class="layui-this">安全设置</li>
+                </ul>
+            </div>
+
+            <div class="security-card">
+                <div class="security-header">
+                    <div class="security-icon">
+                        <i class="fa fa-lock"></i>
+                    </div>
+                    <div class="security-title">修改密码</div>
+                    <div class="security-desc">为了您的账户安全，请定期更换密码</div>
+                </div>
+
+                <form class="layui-form" id="passwordForm">
+                    <input type="hidden" name="userId" th:value="${session.user.getUserId()}">
+                    <input type="hidden" name="userName" th:value="${session.user.getUserName()}">
+                    <input type="hidden" name="userEmail" th:value="${session.user.getUserEmail()}">
+
+                    <div class="form-group">
+                        <i class="fa fa-lock input-icon"></i>
+                        <input type="password" name="oldPassword" id="oldPassword" lay-verify="required" placeholder="请输入当前密码" class="layui-input modern-input">
+                    </div>
+
+                    <div class="form-group">
+                        <i class="fa fa-key input-icon"></i>
+                        <input type="password" name="newPassword" id="newPassword" lay-verify="required|pass" placeholder="请输入新密码" class="layui-input modern-input">
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="strengthBar"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <i class="fa fa-check-circle input-icon"></i>
+                        <input type="password" name="confirmPassword" id="confirmPassword" lay-verify="required|repass" placeholder="请确认新密码" class="layui-input modern-input">
+                    </div>
+
+                    <div class="layui-form-item">
+                        <button class="btn-modern" lay-submit lay-filter="changePwd">
+                            <i class="fa fa-refresh" style="margin-right: 8px;"></i>更新密码
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:include="common/footer :: footer"></div>
+</div>
+
+<script src="/scripts/jquery.min.js"></script>
+<script src="/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'layer', 'element'], function () {
+        let form = layui.form;
+        let layer = layui.layer;
+        let element = layui.element;
+
+        $('#newPassword').on('input', function() {
+            let password = $(this).val();
+            let strength = 0;
+            if (password.length >= 6) strength++;
+            if (password.match(/[a-z]/i)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            
+            let bar = $('#strengthBar');
+            bar.removeClass('strength-weak strength-medium strength-strong');
+            
+            if (strength === 1) bar.addClass('strength-weak');
+            else if (strength === 2) bar.addClass('strength-medium');
+            else if (strength === 3) bar.addClass('strength-strong');
+        });
+
+        form.verify({
+            pass: [
+                /^[\S]{6,16}$/
+                ,'密码必须6到16位，且不能出现空格'
+            ],
+            repass: function(value) {
+                if (value !== $('#newPassword').val()) {
+                    return '两次密码输入不一致';
+                }
+            }
+        });
+
+        form.on('submit(changePwd)', function(data) {
+            let oldPwd = $('#oldPassword').val();
+            let newPwd = $('#newPassword').val();
+            
+            let encryptedOldPwd = CryptoJS.MD5(oldPwd).toString();
+            let encryptedNewPwd = CryptoJS.MD5(newPwd).toString();
+            
+            let currentUserPwd = '[[${session.user.getUserPwd()}]]';
+            if (encryptedOldPwd !== currentUserPwd) {
+                layer.msg('当前密码不正确', {icon: 2});
+                return false;
+            }
+            
+            $('input[name="userPwd"]').remove();
+            $('#passwordForm').append('<input type="hidden" name="userPwd" value="' + encryptedNewPwd + '">');
+            
+            $.ajax({
+                type: 'post',
+                url: '/updateUser',
+                data: $('#passwordForm').serialize(),
+                success: function(res) {
+                    if (res) {
+                        layer.msg('密码修改成功', {icon: 1, time: 2000}, function() {
+                            $('#oldPassword, #newPassword, #confirmPassword').val('');
+                            $('#strengthBar').removeClass('strength-weak strength-medium strength-strong').css('width', '0');
+                        });
+                    } else {
+                        layer.msg('密码修改失败', {icon: 2});
+                    }
+                },
+                error: function() {
+                    layer.msg('请求失败', {icon: 2});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

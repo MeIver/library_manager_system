@@ -71,7 +71,7 @@ public class UserServiceImpl implements IUserService {
         User sessionUser = (User) request.getSession().getAttribute("user");
         user.setUserId(sessionUser.getUserId());
         
-        int n = userMapper.updateByPrimaryKey(user);
+        int n = userMapper.updateByPrimaryKeySelective(user);
 
         if (n > 0) {
             //修改成功，更新session对象

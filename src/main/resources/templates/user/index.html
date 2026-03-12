@@ -1,49 +1,170 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>普通用户-图书管理系统</title>
     <link href="/layui/css/layui.css" rel="stylesheet"/>
-
+    <link href="/css/modern-style.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        .layui-layout-admin .layui-body {
+            background-color: #f8fafc;
+            padding: 2rem;
+        }
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+        .welcome-subtitle {
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+        .stat-info h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin: 0;
+        }
+        .stat-info p {
+            color: var(--secondary-color);
+            margin: 0.25rem 0 0;
+        }
+        .layui-side {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
+        }
+        .modern-carousel {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+        }
+    </style>
 </head>
-<body class="layui-layout-body">
+<body>
 <div class="layui-layout layui-layout-admin">
 
     <div th:include="common/user_header :: header"></div>
 
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
-            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree">
 
-                <li class="layui-nav-item ">
-                    <a class="" href="javascript:;">借阅管理</a>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;"><i class="fa fa-book" style="margin-right: 8px;"></i>借阅管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/userBorrowBookRecord">&emsp;&emsp;借书记录</a></dd>
-                        <dd><a href="/borrowingPage">&emsp;&emsp;借阅书籍</a></dd>
+                        <dd><a href="/userBorrowBookRecord"><i class="fa fa-history" style="margin-right: 8px;"></i>借书记录</a></dd>
+                        <dd><a href="/borrowingPage"><i class="fa fa-plus" style="margin-right: 8px;"></i>借阅书籍</a></dd>
                     </dl>
                 </li>
 
-                <li class="layui-nav-item ">
-                    <a class="" href="javascript:;">书籍管理</a>
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;"><i class="fa fa-book" style="margin-right: 8px;"></i>书籍管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/userReturnBooksPage">&emsp;&emsp;归还书籍</a></dd>
-                        <dd><a href="/findBookPage">&emsp;&emsp;查询书籍</a></dd>
+                        <dd><a href="/userReturnBooksPage"><i class="fa fa-undo" style="margin-right: 8px;"></i>归还书籍</a></dd>
+                        <dd><a href="/findBookPage"><i class="fa fa-search" style="margin-right: 8px;"></i>查询书籍</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a href="/userMessagePage">个人信息</a></li>
+                <li class="layui-nav-item"><a href="/userMessagePage"><i class="fa fa-user-circle" style="margin-right: 8px;"></i>个人信息</a></li>
             </ul>
         </div>
     </div>
 
     <div class="layui-body layui-container">
-        <div class="layui-carousel layui-container" id="index" style="margin-top: 40px;">
-            <div carousel-item>
-                <div><img src="/images/lib1.jpg"/></div>
-                <div><img src="/images/lib2.jpg"/></div>
-                <div><img src="/images/lib3.jpg"/></div>
-                <div><img src="/images/lib4.jpg"/></div>
-                <div><img src="/images/lib5.jpg"/></div>
+        <div class="welcome-section">
+            <h1 class="welcome-title">
+                <i class="fa fa-book" style="margin-right: 10px;"></i>
+                <span class="gradient-text">图书管理系统</span>
+            </h1>
+            <p class="welcome-subtitle">探索知识 · 享受阅读</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+                    <i class="fa fa-book"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>...</h3>
+                    <p>馆藏图书</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <i class="fa fa-calendar-check-o"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>...</h3>
+                    <p>已借图书</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                    <i class="fa fa-clock-o"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>...</h3>
+                    <p>待还图书</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                    <i class="fa fa-star"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>...</h3>
+                    <p>我的收藏</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="modern-carousel">
+            <div class="layui-carousel layui-container" id="index">
+                <div carousel-item>
+                    <div><img src="/images/lib1.jpg" style="width: 100%; height: 100%; object-fit: cover;"/></div>
+                    <div><img src="/images/lib2.jpg" style="width: 100%; height: 100%; object-fit: cover;"/></div>
+                    <div><img src="/images/lib3.jpg" style="width: 100%; height: 100%; object-fit: cover;"/></div>
+                    <div><img src="/images/lib4.jpg" style="width: 100%; height: 100%; object-fit: cover;"/></div>
+                    <div><img src="/images/lib5.jpg" style="width: 100%; height: 100%; object-fit: cover;"/></div>
+                </div>
             </div>
         </div>
     </div>
@@ -59,14 +180,12 @@
     layui.use(['carousel', 'element'], function () {
         let carousel = layui.carousel;
         let element = layui.element;
-        //建造实例
+
         carousel.render({
             elem: '#index'
-            , width: '900' //设置容器宽度
-            , height: '550px' //设置容器高度
-            // , full:'true' //是否全屏轮播,默认false
-            // , arrow: 'always' //始终显示箭头和点击按钮
-            // ,anim: 'updown' //切换动画方式，可从各个方向滚动
+            , width: '100%'
+            , height: '500px'
+            , arrow: 'hover'
         });
     });
 
